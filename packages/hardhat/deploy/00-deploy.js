@@ -14,6 +14,23 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
 
+  await deploy("Registry", {
+    from: deployer,
+    log: true,
+    waitConfirmations: 5,
+  });
+
+  // Getting a previously deployed contract
+  const registry = await ethers.getContract("Registry", deployer);
+  
+  await deploy("RefundFactory", {
+    // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
+    from: deployer,
+    args: [ registry.address ],
+    log: true,
+    waitConfirmations: 5,
+  });
+
   await deploy("Greeter", {
     from: deployer,
     args: ["hello world"],
@@ -59,4 +76,4 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
 };
 
-module.exports.tags = ["Greeter", "Storage"];
+module.exports.tags = ["Registry", "RefundFactory"];

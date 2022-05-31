@@ -1,6 +1,6 @@
 // deploy/00_deploy_my_contract.js
 
-// const { ethers } = require("hardhat");
+const { ethers } = require("hardhat");
 
 // const sleep = (ms) =>
 //   new Promise((r) =>
@@ -23,7 +23,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   // Getting a previously deployed contract
   const registry = await ethers.getContract("Registry", deployer);
   
-  await deploy("RefundFactory", {
+  await deploy("ExpenseDAOFactory", {
     // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
     from: deployer,
     args: [ registry.address ],
@@ -31,18 +31,18 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     waitConfirmations: 5,
   });
 
-  await deploy("Greeter", {
-    from: deployer,
-    args: ["hello world"],
-    log: true,
-  });
+  // await deploy("Greeter", {
+  //   from: deployer,
+  //   args: ["hello world"],
+  //   log: true,
+  // });
 
-  await deploy("Storage", {
-    // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
-    from: deployer,
-    //args: [ "Hello", ethers.utils.parseEther("1.5") ],
-    log: true,
-  });
+  // await deploy("Storage", {
+  //   // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
+  //   from: deployer,
+  //   //args: [ "Hello", ethers.utils.parseEther("1.5") ],
+  //   log: true,
+  // });
 
   // Getting a previously deployed contract
   // const Greeter = new ethers.Contract("Greeter", deployer);
@@ -76,4 +76,4 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
 };
 
-module.exports.tags = ["Registry", "RefundFactory"];
+module.exports.tags = ["Registry", "ExpenseDAOFactory"];

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./Expense.sol";
+import "./ExpenseDAO.sol";
 import "./Registry.sol";
 
 contract ExpenseDAOFactory {

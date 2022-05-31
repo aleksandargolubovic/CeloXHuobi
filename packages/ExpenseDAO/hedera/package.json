@@ -1,0 +1,16 @@
+{
+  "name": "hedera",
+  "type":"module",
+  "version": "1.0.0",
+  "description": "Smart contracts on Hedera",
+  "main": "index.js",
+  "author": "golubovicaleksandarr@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "@hashgraph/sdk": "^2.13.1",
+    "dotenv": "^16.0.0"
+  },
+  "scripts": {
+    "start": "node --experimental-json-modules ./index.js"
+  }
+}

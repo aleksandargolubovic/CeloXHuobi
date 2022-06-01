@@ -8,6 +8,8 @@ import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import _ from '@lodash';
 import { saveOrganization, removeOrganization } from '../store/organizationSlice';
+import { useCelo } from '@celo/react-celo';
+import expenseDAOFactory from "app/contracts/ExpenseDAOFactory.json";
 
 function NewOrganizationHeader(props) {
   const dispatch = useDispatch();
@@ -19,9 +21,40 @@ function NewOrganizationHeader(props) {
   const name = watch('name');
   const theme = useTheme();
   const navigate = useNavigate();
+  const { kit, address, network, performActions } = useCelo();
+  
+  const createNewOrganization = async() => {
+    try {
+      const contract = new kit.connection.web3.eth.Contract(
+        expenseDAOFactory.abi,
+        expenseDAOFactory.address
+      );
+    
+      //console.log("TEST", contract);
+      const parameters = getValues();
+      await performActions(async (kit) => {
+        const gasLimit = await contract.methods
+          .newExpenseOrg(
+            parameters.name, parameters.approvers, parameters.members)
+          .estimateGas();
+
+        const result = await contract.methods.newExpenseOrg(
+          parameters.name, parameters.approvers, parameters.members)
+          .send({ from: address, gasLimit });
+
+        console.log(result);
+
+        const variant = result.status == true ? "success" : "error";
+        const url = `${network.explorer}/tx/${result.transactionHash}`;
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   function handleSaveOrganization() {
-    dispatch(saveOrganization(getValues()));
+    createNewOrganization();
+    //dispatch(saveOrganization(getValues()));
   }
 
   return (

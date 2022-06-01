@@ -7,7 +7,7 @@ import { useCelo } from '@celo/react-celo';
 import 'styles/styles.css';
 
 
-function HashPackLoginTab(props) {
+function CeloLoginTab(props) {
   const dispatch = useDispatch();
   const [status, setStatus] = useState(false);
   const { connect, address } = useCelo();
@@ -28,6 +28,7 @@ function HashPackLoginTab(props) {
   async function showDialog() {
     if (address) {
       console.log(`Connected to ${address}`);
+      setStatus("LOGGED_IN");
     } else {
       console.log("test");
       const a = await connect();
@@ -45,4 +46,4 @@ function HashPackLoginTab(props) {
   );
 }
 
-export default HashPackLoginTab;
+export default CeloLoginTab;

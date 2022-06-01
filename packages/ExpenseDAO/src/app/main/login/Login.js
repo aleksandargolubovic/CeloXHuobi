@@ -7,8 +7,7 @@ import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import HashPackLoginTab from './tabs/HashPackLoginTab';
-//import { useCelo } from '@celo/react-celo';
+import CeloLoginTab from './tabs/CeloLoginTab';
 
 const Root = styled('div')(({ theme }) => ({
   background: `linear-gradient(to right, ${theme.palette.primary.dark} 0%, ${darken(
@@ -30,7 +29,6 @@ const Root = styled('div')(({ theme }) => ({
 
 function Login() {
   const [selectedTab, setSelectedTab] = useState(0);
-  //const { connect, address } = useCelo();
 
   function handleTabChange(event, value) {
     setSelectedTab(value);
@@ -82,12 +80,7 @@ function Login() {
               />
             </Tabs>
 
-            {selectedTab === 0 && <HashPackLoginTab />}
-            {/* <div className="w-full">
-            <Button className="w-full my-48" color="primary" variant="contained" onClick={connect}>
-              Connect your wallet
-            </Button>
-    </div> */}
+            {selectedTab === 0 && <CeloLoginTab />}
           </CardContent>
 
           <div className="flex flex-col items-center justify-center pb-32">

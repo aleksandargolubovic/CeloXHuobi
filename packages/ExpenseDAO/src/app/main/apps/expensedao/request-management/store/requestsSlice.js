@@ -1,10 +1,6 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
 import axios from 'axios';
-// import instance from "app/services/hedera/expenseService/expenseService";
-// import {
-//   getProvider,
-//   getSigner } from 'app/services/hedera/providers/hashconnectProvider';
-// import { AccountId, Hbar } from "@hashgraph/sdk";
+import Web3 from 'web3';
 
 const APPROVED = "Approved";
 const DENIED = "Denied";
@@ -33,35 +29,34 @@ const decodeCategory = (categoryNum) => {
 
 export const getRequests =
   createAsyncThunk('expensedao/requests/getRequests',
-                    async (organizationID, isAdmin) => {
+                    async (params) => {
 
-  // let response;
-  // if (isAdmin) {
-  //   response = await instance.getRequests(organizationID);
-  // } else {
-  //   const provider = getProvider();
-  //   const signer = getSigner(provider);
-  //   response = await instance.getMembersRequests(organizationID, signer);
-  // }
-  // console.log(response);
+  let response;
+  if (params.organization.isAdmin) {
+    response = await params.organization.contract.methods.getRequests().call();
+  } else {
+    response = await params.organization.contract.methods.getMembersRequests()
+      .call({from: params.address});
+  }
+  console.log(response);
 
-  // let data = response.requests.map((req) => {
+  let data = response.map((req) => {
 
-  //   const newElem =
-  //   {
-  //     id: req.id,
-  //     creator: (AccountId.fromSolidityAddress(req.member)).toString(),
-  //     amount: Hbar.fromTinybars(req.amount).toString(),
-  //     date: (new Date(parseInt(req.date))).toLocaleDateString("en-US"),
-  //     status: req.processed ? (req.approved ? APPROVED : DENIED) : PROCESSING,
-  //     category: decodeCategory(req.category),
-  //     receipt: req.url,
-  //     description: req.description,
-  //   };
-  //   return newElem;
-  // });
+    const newElem =
+    {
+      id: req.id,
+      creator: req.member,
+      amount: (Web3.utils.fromWei(req.amount.toString(), 'ether')),
+      date: (new Date(parseInt(req.date))).toLocaleDateString("en-US"),
+      status: req.processed ? (req.approved ? APPROVED : DENIED) : PROCESSING,
+      category: decodeCategory(req.category),
+      receipt: req.url,
+      description: req.description,
+    };
+    return newElem;
+  });
   
-  // return data;
+  return data;
 });
 
 export const removeRequests = createAsyncThunk(

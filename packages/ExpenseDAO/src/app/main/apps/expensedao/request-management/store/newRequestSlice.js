@@ -2,36 +2,31 @@ import { createEntityAdapter, createSlice, createAsyncThunk } from '@reduxjs/too
 import axios from 'axios';
 import FuseUtils from '@fuse/utils';
 
-import instance from "app/services/hedera/expenseService/expenseService";
-import {
-  getProvider,
-  getSigner
-} from 'app/services/hedera/providers/hashconnectProvider';
 
 
-export const sendRequest = createAsyncThunk(
-  'expensedao/newRequest/sendRequest',
-  async (requestData, { dispatch, getState }) => {
-    const provider = getProvider();
-    const signer = getSigner(provider);
-    console.log("SIGNER", signer);
-    let amount = parseFloat(parseFloat(requestData.amount) / parseFloat("0.101"));
-    amount = parseInt(amount);
-    const response = await instance.createRequest(
-      requestData.organizationId,
-      requestData.description,
-      requestData.image.ipfsUrl,
-      signer.accountToSign,//requestData.address,
-      amount,
-      requestData.date,
-      requestData.category,
-      signer
-    );
+// export const sendRequest = createAsyncThunk(
+//   'expensedao/newRequest/sendRequest',
+//   async (params, { dispatch, getState }) => {
+//     const provider = getProvider();
+//     const signer = getSigner(provider);
+//     console.log("SIGNER", signer);
+//     let amount = parseFloat(parseFloat(requestData.amount) / parseFloat("0.101"));
+//     amount = parseInt(amount);
+//     const response = await instance.createRequest(
+//       requestData.organizationId,
+//       requestData.description,
+//       requestData.image.ipfsUrl,
+//       signer.accountToSign,//requestData.address,
+//       amount,
+//       requestData.date,
+//       requestData.category,
+//       signer
+//     );
 
-    console.log(response);
-    return response;
-  }
-);
+//     console.log(response);
+//     return response;
+//   }
+// );
 
 const contactsAdapter = createEntityAdapter({});
 

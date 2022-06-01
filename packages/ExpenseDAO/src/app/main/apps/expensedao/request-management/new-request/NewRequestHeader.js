@@ -9,24 +9,52 @@ import { useFormContext } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import _ from '@lodash';
-import { sendRequest } from '../store/newRequestSlice';
 import { addToIPFS, retrieveFile } from "./helpers/web3Storage";
+import { useCelo } from '@celo/react-celo';
+import Web3 from 'web3';
 
 function NewRequestHeader(props) {
   const dispatch = useDispatch();
   const methods = useFormContext();
   const organization = useSelector(({ expensedaoorg }) => expensedaoorg.organization);
+  const { kit, address, network, performActions } = useCelo();
   const { formState, watch, getValues, setValue } = methods;
   const { isValid, dirtyFields } = formState;
   const featuredImageId = watch('featuredImageId');
   const image = watch('image');
-  //date = watch('date', new Date());
   const category = watch('category');
   const description = watch('description');
   const amount = watch('amount');
   const theme = useTheme();
   const navigate = useNavigate();
   const [buttonLoading, setButtonLoading] = useState(false);
+
+  function encodeCategory(category) {
+    let categoryInt = 0;
+    switch (category) {
+      case 'Equipment':
+        categoryInt = 1;
+        break;
+      case 'Home Office':
+        categoryInt = 2;
+        break;
+      case 'Meals and Entertainment':
+        categoryInt = 3;
+        break;
+      case 'Office Supplies':
+        categoryInt = 4;
+        break;
+      case 'Travel':
+        categoryInt = 5;
+        break;
+      case 'Other':
+        categoryInt = 6;
+        break;
+      default:
+        categoryInt = 0;
+    }
+    return categoryInt;
+  }
 
   function handleSendRequest() {
     console.log(getValues());
@@ -35,14 +63,46 @@ function NewRequestHeader(props) {
     const files = [ image.file ];
     addToIPFS(files).then(async (result) => {
       console.log(result);
+
       let url = await retrieveFile(result);
       console.log(url);
       let date = (new Date()).getTime();
       setValue("date", date);
-      setValue('organizationId', organization.id);
       image.ipfsUrl = url;
       console.log(getValues());
-      dispatch(sendRequest(getValues()));
+
+      try {
+        const parameters = getValues();
+        await performActions(async (kit) => {
+          const gasLimit = await organization.contract.methods
+            .createRequest(
+              parameters.description,
+              parameters.image.ipfsUrl,
+              address,
+              Web3.utils.toWei(parameters.amount, 'ether'),
+              parameters.date,
+              encodeCategory(parameters.category))
+            .estimateGas();
+  
+          const result = await organization.contract.methods
+            .createRequest(
+              parameters.description,
+              parameters.image.ipfsUrl,
+              address,
+              Web3.utils.toWei(parameters.amount, 'ether'),
+              parameters.date,
+              encodeCategory(parameters.category))
+            .send({ from: address, gasLimit });
+  
+          console.log(result);
+  
+          const variant = result.status == true ? "success" : "error";
+          const url = `${network.explorer}/tx/${result.transactionHash}`;
+        });
+      } catch (e) {
+        console.log(e);
+      }
+
       setButtonLoading(false);
 
     }, function (err) {

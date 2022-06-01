@@ -12,8 +12,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { useDeepCompareEffect } from '@fuse/hooks';
 import reducer from '../store';
-import { resetRequest, getRequest, approveRequest, denyRequest } from '../store/requestSlice';
+import { resetRequest, getRequest, processRequest } from '../store/requestSlice';
 import RequestDetailsTab from './tabs/RequestDetailsTab';
+import { useCelo } from '@celo/react-celo';
 
 const Root = styled(FusePageCarded)(({ theme }) => ({
   '& .FusePageCarded-header': {
@@ -30,6 +31,7 @@ const Root = styled(FusePageCarded)(({ theme }) => ({
 function Request(props) {
   const dispatch = useDispatch();
   const organization = useSelector(({ expensedaoorg }) => expensedaoorg.organization);
+  const { kit, address, network, performActions } = useCelo();
   const request = useSelector(({ expensedao }) => expensedao.request);
   const theme = useTheme();
 
@@ -38,7 +40,7 @@ function Request(props) {
   const [noRequest, setNoRequest] = useState(false);
 
   useDeepCompareEffect(() => {
-    dispatch(getRequest(routeParams)).then((action) => {
+    dispatch(getRequest({organization, routeParams})).then((action) => {
       if (!action.payload) {
         setNoRequest(true);
       }
@@ -57,12 +59,30 @@ function Request(props) {
     setTabValue(value);
   }
 
-  function handleApproveRequest() {
-    dispatch(approveRequest(routeParams));
-  }
+  async function handleRequest(newStatus) {
+    try {
+      await performActions(async (kit) => {
+        const gasLimit = await organization.contract.methods
+          .processRequest(
+            routeParams.requestId,
+            true)
+          .estimateGas();
 
-  function handleDenyRequest() {
-    dispatch(denyRequest(routeParams));
+        const result = await organization.contract.methods
+        .processRequest(
+          routeParams.requestId,
+          newStatus)
+        .send({ from: address, gasLimit });
+
+        console.log(result);
+
+        const variant = result.status == true ? "success" : "error";
+        const url = `${network.explorer}/tx/${result.transactionHash}`;
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    dispatch(processRequest({routeParams, newStatus}));
   }
 
   if (noRequest) {
@@ -133,7 +153,7 @@ function Request(props) {
                   className="whitespace-nowrap mx-4"
                   variant="contained"
                   color="secondary"
-                  onClick={handleApproveRequest}
+                  onClick={() => {handleRequest(true)}}
                 >
                   Approve
                 </Button>
@@ -141,7 +161,7 @@ function Request(props) {
                   className="whitespace-nowrap mx-4"
                   variant="contained"
                   color="secondary"
-                  onClick={handleDenyRequest}
+                  onClick={() => {handleRequest(false)}}
                 >
                   Deny
                 </Button>

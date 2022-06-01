@@ -10,16 +10,15 @@ import { getWidgets, selectWidgets } from '../store/widgetsSlice';
 import WidgetOrgBudget from '../widgets/WidgetOrgBudget';
 import WidgetReqPieChart from '../widgets/WidgetReqPieChart';
 import WidgetReqNum from '../widgets/WidgetReqNum';
-import instance from "app/services/hedera/expenseService/expenseService";
-import {
-  getProvider,
-  getSigner } from 'app/services/hedera/providers/hashconnectProvider';
+import Web3 from 'web3';
+import { useCelo } from '@celo/react-celo';
 
 function HomeTab() {
   const [amount, setAmount] = useState('');
   const dispatch = useDispatch();
   const widgets = useSelector(selectWidgets);
   const organization = useSelector(({ expensedaoorg }) => expensedaoorg.organization);
+  const { kit, address, performActions } = useCelo();
   //const events = useEvents(organization.id, 1);
   const container = {
     show: {
@@ -39,12 +38,28 @@ function HomeTab() {
   }
 
   const sendFunds = async() => {
-    const provider = getProvider();
-    const signer = getSigner(provider);
-    const ret = await instance.sendFunds(organization.id, amount, signer);
-    console.log(ret);
+    try {    
+      await performActions(async (k) => {
+        const stableToken = await k.contracts.getStableToken();
+        const result = await stableToken
+          .transfer(
+            // impact market contract
+            organization.contract.options.address,
+            Web3.utils.toWei(amount, 'ether')
+          )
+          .sendAndWaitForReceipt({
+            from: address,
+            gasPrice: k.connection.defaultGasPrice,
+          });
+        
+        console.log(result);
+      });
+    } catch (e) {
+      console.log(e);
+    }
+
     setAmount(0);
-    dispatch(getWidgets(organization.id));
+    dispatch(getWidgets({contract: organization.contract, kit: kit }));
   }
 
   return (
@@ -80,7 +95,7 @@ function HomeTab() {
                 id="amountToSend"
                 value={amount}
                 InputProps={{
-                  startAdornment: <InputAdornment position="start">ℏ</InputAdornment>,
+                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
                 }}
                 type="number"
                 variant="outlined"

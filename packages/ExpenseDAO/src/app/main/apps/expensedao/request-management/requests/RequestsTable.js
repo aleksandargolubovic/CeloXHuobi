@@ -15,10 +15,12 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import RequestsStatus from '../request/RequestsStatus';
 import { selectRequests, getRequests } from '../store/requestsSlice';
 import RequestsTableHead from './RequestsTableHead';
+import { useCelo } from '@celo/react-celo';
 
 function RequestsTable(props) {
   const dispatch = useDispatch();
   const organization = useSelector(({ expensedaoorg }) => expensedaoorg.organization);
+  const { address } = useCelo();
   const requests = useSelector(selectRequests);
   const searchText = useSelector(({ expensedao }) => expensedao.requests.searchText);
 
@@ -33,8 +35,8 @@ function RequestsTable(props) {
   });
 
   useEffect(() => {
-    //console.log("organization id:", organization.id);
-    dispatch(getRequests(organization.id, organization.isAdmin)).then(() => setLoading(false));
+      dispatch(getRequests({organization, address}))
+        .then(() => setLoading(false));
   }, [dispatch]);
 
   useEffect(() => {

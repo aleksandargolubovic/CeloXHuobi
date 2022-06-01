@@ -16,13 +16,17 @@ import Typography from '@mui/material/Typography';
 import { useForm, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import _ from '@lodash';
-
+import { useCelo } from '@celo/react-celo';
+import registry from "app/contracts/Registry.json";
+import expenseDAO from "app/contracts/ExpenseDAO.json";
 /**
  * Form Validation Schema
  */
 const schema = yup.object().shape({
   name: yup.string().required('You must enter a name'),
 });
+
+const NULL_ADDR = '0x0000000000000000000000000000000000000000';
 
 function EnterOrganizationDialog(props) {
   const dispatch = useDispatch();
@@ -34,6 +38,15 @@ function EnterOrganizationDialog(props) {
     },
     resolver: yupResolver(schema),
   });
+
+  const { kit, address, network, performActions } = useCelo();
+  
+  const contract = new kit.connection.web3.eth.Contract(
+    registry.abi,
+    registry.address
+  );
+
+  console.log("TEST", contract);
 
   const { isValid, dirtyFields, errors } = formState;
 
@@ -49,18 +62,26 @@ function EnterOrganizationDialog(props) {
     props.setOpenDialog(false);
   }
 
-  function onSubmit(data) {
+  async function onSubmit(data) {
     console.info(data);
     dispatch(newOrganization());
-    dispatch(getOrganization(data.name)).then((action) => {
-      console.log("RESULT", action);
-      if (!action.payload || action.payload === "0.0.0") {
-        dispatch(showMessage({ message: "Organization doesn't exist" }));
-      } else {
+
+    let response = await contract.methods.organizations(data.name).call();
+    console.log(response);
+    
+    if (response === NULL_ADDR) {
+      dispatch(showMessage({ message: "Organization doesn't exist" }));
+    } else {
+      const daoContract = new kit.connection.web3.eth.Contract(
+        expenseDAO.abi,
+        response
+      );
+      console.log("DAO CONTRACT", daoContract);
+      dispatch(getOrganization({address: response, name: data.name, contract: daoContract})).then((action) => {
         props.setOpenDialog(false);
         navigate('/apps/expensedao/organization');
-      }
-    });
+      });
+    }
   }
 
   return (

@@ -12,7 +12,7 @@ import reducer from './store';
 import { getWidgets, selectWidgets } from './store/widgetsSlice';
 import HomeTab from './tabs/HomeTab';
 import TeamMembersTab from './tabs/TeamMembersTab';
-import NewOrganizationHeader from '../organization-setup/NewOrganizationHeader';
+import { useCelo } from '@celo/react-celo';
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   '& .FusePageSimple-header': {
@@ -25,12 +25,13 @@ function OrganizationDashboard(props) {
   const dispatch = useDispatch();
   const organization = useSelector(({ expensedaoorg }) => expensedaoorg.organization);
   const widgets = useSelector(selectWidgets);
+  const { kit } = useCelo();
 
   const pageLayout = useRef(null);
   const [tabValue, setTabValue] = useState(0);
 
   useEffect(() => {
-    dispatch(getWidgets(organization.id));
+    dispatch(getWidgets({contract: organization.contract, kit: kit }));
   }, [dispatch]);
 
   function handleChangeTab(event, value) {

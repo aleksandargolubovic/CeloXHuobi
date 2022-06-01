@@ -1,7 +1,9 @@
 import { createEntityAdapter, createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import FuseUtils from '@fuse/utils';
-
+import { useCelo } from '@celo/react-celo';
+import registry from "app/contracts/Registry.json";
+//import { Registry } from "app/contracts/types/Registry";
 // import instance from "app/services/hedera/expenseService/expenseService";
 // import {
 //   getProvider,
@@ -11,6 +13,7 @@ export const getOrganization =
   createAsyncThunk('expensedao/organization/getProduct',
   async (params, {getState}) => {
 
+  
   // const response = await axios.get('/api/e-commerce-app/product', { params });
   // const data = await response.data;
 
@@ -26,13 +29,16 @@ export const getOrganization =
 
   // const role = await instance.isApprover(exist.toString(), signer);
   // console.log(role);
-  // const organization = {
-  //   id: exist,
-  //   name: params,
-  //   isAdmin: role
-  // };
-  // console.log("NEW STATE", organization);
-  // return organization;
+  const isAdmin = await params.contract.methods.isApprover().call();
+  console.log("IS ADMIN", isAdmin);
+  const organization = {
+    id: params.address,
+    name: params.name,
+    isAdmin: isAdmin,
+    contract: params.contract,
+  };
+  console.log("NEW STATE", organization);
+  return organization;
 });
 
 export const removeOrganization = createAsyncThunk(

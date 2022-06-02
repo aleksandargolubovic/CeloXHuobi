@@ -5,11 +5,12 @@ import { useOnRepetition } from "./useOnRepetition";
 //   getProvider,
 //   getSigner } from 'app/services/hedera/providers/hashconnectProvider';
 
-import instance from "app/services/hedera/expenseService/expenseService";
+// import instance from "app/services/hedera/expenseService/expenseService";
 const getEvents = async (contractID) => {
   if (contractID !== '') {
-    const message = await instance.getEventsFromMirror(contractID);
-    return message;
+    //const message = await instance.getEventsFromMirror(contractID);
+    //return message;
+    return "";
   }
   return '';
   

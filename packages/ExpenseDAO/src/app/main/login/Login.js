@@ -74,9 +74,9 @@ function Login() {
               className="w-full mb-32"
             >
               <Tab
-                icon={<img className="h-40" src="assets/images/logos/hashpack.svg" alt="auth0" />}
+                icon={<img className="h-40" src="assets/images/logos/celo-celo-logo.svg" alt="auth0" />}
                 className="min-w-0"
-                label="HashPack"
+                label="Celo"
               />
             </Tabs>
 

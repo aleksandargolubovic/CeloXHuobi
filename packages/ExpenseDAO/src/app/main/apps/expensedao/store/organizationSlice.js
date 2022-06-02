@@ -3,32 +3,11 @@ import axios from 'axios';
 import FuseUtils from '@fuse/utils';
 import { useCelo } from '@celo/react-celo';
 import registry from "app/contracts/Registry.json";
-//import { Registry } from "app/contracts/types/Registry";
-// import instance from "app/services/hedera/expenseService/expenseService";
-// import {
-//   getProvider,
-//   getSigner } from 'app/services/hedera/providers/hashconnectProvider';
 
 export const getOrganization =
   createAsyncThunk('expensedao/organization/getProduct',
   async (params, {getState}) => {
 
-  
-  // const response = await axios.get('/api/e-commerce-app/product', { params });
-  // const data = await response.data;
-
-  // return data === undefined ? null : data;
-  ///TODO
-  console.log("PARAMS", params);
-  // const provider = getProvider();
-  // const signer = getSigner(provider);
-  // // console.log("SIGNER", signer);
-  // const exist = await instance.getOrganizationAddress(params);
-  // console.log(exist);
-  // //const {organization} = getState().eCommerceApp;
-
-  // const role = await instance.isApprover(exist.toString(), signer);
-  // console.log(role);
   const isAdmin = await params.contract.methods.isApprover().call();
   console.log("IS ADMIN", isAdmin);
   const organization = {

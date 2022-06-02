@@ -2,7 +2,7 @@ import FuseSplashScreen from '@fuse/core/FuseSplashScreen';
 //import auth0Service from 'app/services/auth0Service';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { setUserDataHashPack } from 'app/auth/store/userSlice';
+import { setUserdataCelo } from 'app/auth/store/userSlice';
 import { showMessage } from 'app/store/fuse/messageSlice';
 
 function Callback(props) {
@@ -16,7 +16,7 @@ function Callback(props) {
     //    * Retrieve user data from Auth0
     //    */
     //   auth0Service.getUserData().then((tokenData) => {
-    //     dispatch(setUserDataHashPack(tokenData));
+    //     dispatch(setUserdataCelo(tokenData));
     //     dispatch(showMessage({ message: 'Logged in with Auth0' }));
     //   });
     // });

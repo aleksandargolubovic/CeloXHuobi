@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from '@reduxjs/toolkit';
 import { hideMessage, showMessage } from 'app/store/fuse/messageSlice';
 
-import { setUserDataHashPack, setUserData, logoutUser } from './store/userSlice';
+import { setUserdataCelo, setUserData, logoutUser } from './store/userSlice';
 
 class Auth extends Component {
   state = {
@@ -80,7 +80,7 @@ class Auth extends Component {
          * Retrieve user data from Auth0
          */
         auth0Service.getUserData().then((tokenData) => {
-          this.props.setUserDataHashPack(tokenData);
+          this.props.setUserdataCelo(tokenData);
 
           resolve();
 
@@ -138,7 +138,7 @@ function mapDispatchToProps(dispatch) {
     {
       logout: logoutUser,
       setUserData,
-      setUserDataHashPack,
+      setUserdataCelo,
       showMessage,
       hideMessage,
     },

@@ -10,9 +10,12 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { logoutUser } from 'app/auth/store/userSlice';
+import { useCelo } from '@celo/react-celo';
+
 //import { useBalance, getPrice, useExchangeHbarPrice } from 'app/services/hedera/hooks';
 
 function UserMenu(props) {
+  const { destroy, network } = useCelo();
   const dispatch = useDispatch();
   const user = useSelector(({ auth }) => auth.user);
   const navigate = useNavigate();
@@ -58,7 +61,7 @@ function UserMenu(props) {
             {user.data.displayName}
           </Typography>
           <Typography className="text-11 font-medium capitalize" color="textSecondary">
-            HashPack account
+            {network.name}
           </Typography>
         </div>
 
@@ -115,9 +118,10 @@ function UserMenu(props) {
               <ListItemText primary="Inbox" />
             </MenuItem> */}
             <MenuItem
-              onClick={() => {
+              onClick={async () => {
+                await destroy();
                 dispatch(logoutUser());
-                userMenuClose();
+                //userMenuClose();
               }}
             >
               <ListItemIcon className="min-w-40">

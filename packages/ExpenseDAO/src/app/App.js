@@ -11,8 +11,6 @@ import { CacheProvider } from '@emotion/react';
 import { selectCurrLangDir } from 'app/store/i18nSlice';
 import withAppProviders from './withAppProviders';
 import { Auth } from './auth';
-import { CeloProvider, Alfajores } from '@celo/react-celo';
-//import '@celo/react-celo/lib/styles.css';
 
 // import axios from 'axios';
 /**
@@ -35,34 +33,8 @@ const emotionCacheOptions = {
   },
 };
 
-// function WrappedApp() {
-//   return (
-//     <CeloProvider
-//       dapp={{
-//         name: 'My awesome dApp',
-//         description: 'My awesome description',
-//         url: 'https://example.com',
-//       }}
-//       network={Alfajores}
-//     >
-//       <App />
-//     </CeloProvider>
-//   );
-// }
-
-
 const App = () => {
   const langDirection = useSelector(selectCurrLangDir);
-  
-
-  // return (
-  //   <>
-  //     {address ? (
-  //       <div>Connected to {address}</div>
-  //     ) : (
-  //       <button onClick={connect}>Connect wallet</button>
-  //     )}
-  //   </>
 
   return (
     <CacheProvider value={createCache(emotionCacheOptions[langDirection])}>

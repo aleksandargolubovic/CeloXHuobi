@@ -1,8 +1,3 @@
-// import createGenerateClassName from '@mui/styles/createGenerateClassName';
-// import jssPreset from '@mui/styles/jssPreset';
-// import { create } from 'jss';
-// import jssExtend from 'jss-plugin-extend';
-// import rtl from 'jss-rtl';
 import Provider from 'react-redux/es/components/Provider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -10,18 +5,38 @@ import { StyledEngineProvider } from '@mui/material/styles';
 import AppContext from './AppContext';
 import routes from './fuse-configs/routesConfig';
 import store from './store';
-import { CeloProvider, Alfajores } from '@celo/react-celo';
-
+import { CeloProvider, Alfajores, SupportedProviders } from '@celo/react-celo';
 
 
 const withAppProviders = (Component) => (props) => {
   const WrapperComponent = () => (
     <CeloProvider
       dapp={{
-        name: 'My awesome dApp',
-        description: 'My awesome description',
-        url: 'https://example.com',
+        name: 'EXPENSE DAO',
+        description: 'an Expense Management System for DAOs',
+        url: 'https://expensedao.com',
       }}
+      connectModal={{
+        // This options changes the title of the modal and can be either a string or a react element
+        title: <span>Connect your Wallet</span>,
+        providersOptions: {
+          // This option hides specific wallets from the default list
+          hideFromDefaults: [
+            SupportedProviders.MetaMask,
+            SupportedProviders.PrivateKey,
+            SupportedProviders.CeloExtensionWallet,
+            SupportedProviders.Valora,
+            SupportedProviders.Ledger,
+          ],
+    
+          // This option hides all default wallets
+          //hideFromDefaults: true,
+    
+          // This option toggles on and off the searchbar
+          searchable: false,
+        },
+      }}
+
       network={Alfajores}
     >
     <AppContext.Provider

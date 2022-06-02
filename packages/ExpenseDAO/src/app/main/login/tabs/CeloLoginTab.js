@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { setUserDataHashPack } from 'app/auth/store/userSlice';
+import { setUserdataCelo } from 'app/auth/store/userSlice';
 import { showMessage } from 'app/store/fuse/messageSlice';
 import { useCelo } from '@celo/react-celo';
 import 'styles/styles.css';
@@ -20,8 +20,7 @@ function CeloLoginTab(props) {
         photoURL: "",
         email: "CELO account",
       };
-      dispatch(setUserDataHashPack(tokenData));
-      dispatch(showMessage({ message: 'Logged in with CELO' }));
+      dispatch(setUserdataCelo(tokenData));
     }
   }, [dispatch, status]);
 
@@ -30,9 +29,7 @@ function CeloLoginTab(props) {
       console.log(`Connected to ${address}`);
       setStatus("LOGGED_IN");
     } else {
-      console.log("test");
       const a = await connect();
-      console.log('aaa', a);
       setStatus("LOGGED_IN");
     } 
   }

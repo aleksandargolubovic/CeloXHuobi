@@ -143,4 +143,3 @@ function EnterOrganizationDialog(props) {
 }
 
 export default withReducer('expensedaoorg', reducer)(EnterOrganizationDialog);
-//export default EnterOrganizationDialog;

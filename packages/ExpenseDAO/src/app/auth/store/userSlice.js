@@ -6,13 +6,12 @@ import history from '@history';
 import _ from '@lodash';
 import { setInitialSettings, setDefaultSettings } from 'app/store/fuse/settingsSlice';
 import { showMessage } from 'app/store/fuse/messageSlice';
-import hashPackService from 'app/services/hashPackService';
 import settingsConfig from 'app/fuse-configs/settingsConfig';
 
-export const setUserDataHashPack = (tokenData) => async (dispatch) => {
+export const setUserdataCelo = (tokenData) => async (dispatch) => {
   const user = {
     role: ['admin'],
-    from: 'hashpack',
+    from: 'celo',
     data: {
       displayName: tokenData.username || tokenData.name,
       photoURL: tokenData.picture,
@@ -84,23 +83,24 @@ export const logoutUser = () => async (dispatch, getState) => {
     pathname: '/',
   });
 
-  switch (user.from) {
-    case 'firebase': {
-      firebaseService.signOut();
-      break;
-    }
-    case 'auth0': {
-      auth0Service.logout();
-      break;
-    }
-    case 'hashpack': {
-      hashPackService.logout();
-      break;
-    }
-    default: {
-      jwtService.logout();
-    }
-  }
+  // switch (user.from) {
+  //   case 'firebase': {
+  //     firebaseService.signOut();
+  //     break;
+  //   }
+  //   case 'auth0': {
+  //     auth0Service.logout();
+  //     break;
+  //   }
+  //   case 'hashpack': {
+  //     destroy();
+  //     //hashPackService.logout();
+  //     break;
+  //   }
+  //   default: {
+  //     jwtService.logout();
+  //   }
+  // }
 
   dispatch(setInitialSettings());
 

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import Icon from '@mui/material/Icon';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import MenuItem from '@mui/material/MenuItem';
@@ -12,7 +14,44 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import clsx from 'clsx';
 
 import { useFormContext, Controller } from 'react-hook-form';
+import Webcam from "react-webcam";
 
+
+function dataURLtoFile(dataurl) {
+  var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+    bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], { type: mime });
+}
+
+function readFileAsync(file) {
+  return new Promise((resolve, reject) => {
+    if (!file) {
+      return;
+    }
+    const reader = new FileReader();
+
+    reader.onload = (loadEvt) => {
+      resolve({
+        id: FuseUtils.generateGUID(),
+        url: `data:${file.type};base64,${btoa(reader.result)}`,
+        type: 'image',
+        file: file,
+        ipfsUrl: '',
+      });
+    };
+    reader.onerror = reject;
+    reader.readAsBinaryString(file);
+  });
+}
+
+const videoConstraints = {
+  width: 1280,
+  height: 720,
+  facingMode: "user"
+};
 
 const Root = styled('div')(({ theme }) => ({
   '& .productImageFeaturedStar': {
@@ -53,6 +92,7 @@ const Root = styled('div')(({ theme }) => ({
 
 function BasicInfoTab(props) {
   const [loadingAmount, setLoadingAmount] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const methods = useFormContext();
   const { control, formState, watch, register, setValue } = methods;
@@ -61,6 +101,27 @@ function BasicInfoTab(props) {
   const categories = [
     "Equipment", "Home Office", "Meals and Entertainment", "Office Supplies", "Travel", "Other"
   ];
+
+  async function recognizeAmount(newImage) {
+    setLoadingAmount(true);
+    let src = await new Promise(resolve => {
+      const reader = new FileReader();
+      reader.readAsDataURL(newImage.file);
+      reader.onload = () => resolve(reader.result);
+    });
+    Tesseract.recognize(
+      src,
+      'eng',
+      { logger: m => console.log(m) }
+    ).then(({ data: { text } }) => {
+      console.log(text);
+      let totalPosition = text.indexOf("Total") + 6;
+      let amount = text.substring(totalPosition, text.indexOf("\n", totalPosition));
+      console.log(amount);
+      setValue('amount', amount)
+      setLoadingAmount(false);
+    })
+  }
 
   return (
     <div>
@@ -82,66 +143,74 @@ function BasicInfoTab(props) {
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   value == "" ?
-                    <label
-                      htmlFor="button-file"
-                      className="productImageUpload flex items-center justify-center relative w-128 h-128 rounded-16 mx-12 mb-24 overflow-hidden cursor-pointer shadow hover:shadow-lg"
-                    >
-                      <input
-                        accept="image/*"
-                        className="hidden"
-                        id="button-file"
-                        type="file"
-                        onChange={async (e) => {
-                          function readFileAsync() {
-                            return new Promise((resolve, reject) => {
-                              const file = e.target.files[0];
-                              if (!file) {
-                                return;
-                              }
-                              const reader = new FileReader();
+                    <>
+                      <label
+                        htmlFor="button-file"
+                        className="productImageUpload flex items-center justify-center relative w-128 h-128 rounded-16 mx-12 mb-24 overflow-hidden cursor-pointer shadow hover:shadow-lg"
+                      >
+                        <input
+                          accept="image/*"
+                          className="hidden"
+                          id="button-file"
+                          type="file"
+                          onChange={async (e) => {
+                            const newImage = await readFileAsync(e.target.files[0]);
+                            console.log("newImage222222");
 
-                              reader.onload = (loadEvt) => {
-                                resolve({
-                                  id: FuseUtils.generateGUID(),
-                                  url: `data:${file.type};base64,${btoa(reader.result)}`,
-                                  type: 'image',
-                                  file: file,
-                                  ipfsUrl: '',
-                                });
-                              };
+                            console.log(newImage);
+                            onChange(newImage);
+                            recognizeAmount(newImage);
 
-                              reader.onerror = reject;
+                          }}
+                        />
+                        <Icon fontSize="large" color="action">
+                          cloud_upload
+                        </Icon>
+                      </label>
+                      <label
+                        onClick={() => { setOpenDialog(true); console.log("123321asdasda"); console.log(openDialog); }}
+                        className="productImageUpload flex items-center justify-center relative w-128 h-128 rounded-16 mx-12 mb-24 overflow-hidden cursor-pointer shadow hover:shadow-lg"
+                      >
+                        <Icon fontSize="large" color="action">
+                          photo_camera
+                        </Icon>
 
-                              reader.readAsBinaryString(file);
-                            });
-                          }
-
-                          const newImage = await readFileAsync();
-                          onChange(newImage);
-                          setLoadingAmount(true);
-                          let src = await new Promise(resolve => {
-                            const reader = new FileReader();
-                            reader.readAsDataURL(newImage.file);
-                            reader.onload = () => resolve(reader.result);
-                          });
-                          Tesseract.recognize(
-                            src,
-                            'eng',
-                            { logger: m => console.log(m) }
-                          ).then(({ data: { text } }) => {
-                            console.log(text);
-                            let totalPosition = text.indexOf("Total") + 6;
-                            let amount = text.substring(totalPosition, text.indexOf("\n", totalPosition));
-                            console.log(amount);
-                            setValue('amount', amount)
-                            setLoadingAmount(false);
-                          })
-                        }}
-                      />
-                      <Icon fontSize="large" color="action">
-                        cloud_upload
-                      </Icon>
-                    </label>
+                      </label>
+                      <Dialog
+                        open={openDialog}
+                        onClose={() => setOpenDialog(false)}
+                        aria-labelledby="form-dialog-title"
+                        scroll="body"
+                      >
+                        <DialogContent classes={{ root: 'p-16 pb-0 sm:p-24 sm:pb-0' }}>
+                          <Webcam
+                            audio={false}
+                            height={1280}
+                            screenshotFormat="image/jpeg"
+                            width={1280}
+                            videoConstraints={videoConstraints}
+                          >
+                            {({ getScreenshot }) => (
+                              <LoadingButton
+                                variant="contained"
+                                color="primary"
+                                type="submit"
+                                onClick={async () => {
+                                  const imageSrc = getScreenshot();
+                                  const file = dataURLtoFile(imageSrc);
+                                  const newImage = await readFileAsync(file);
+                                  onChange(newImage);
+                                  setOpenDialog(false);
+                                  recognizeAmount(newImage);
+                                }}
+                              >
+                                Capture photo
+                              </LoadingButton>
+                            )}
+                          </Webcam>
+                        </DialogContent>
+                      </Dialog>
+                    </>
                     :
                     <div
                       role="button"

@@ -21,8 +21,9 @@ import {
 } from './store/dataSlice';
 import reducer from './store';
 import { closeNotificationPanel, toggleNotificationPanel } from './store/stateSlice';
-import { useEvents } from 'app/services/hedera/hooks';
+import { useEvents } from 'app/services/hooks';
 import { getWidgets } from 'app/main/apps/expensedao/organization-dashboard//store/widgetsSlice';
+import { useCelo } from '@celo/react-celo';
 
 const StyledSwipeableDrawer = styled(SwipeableDrawer)(({ theme }) => ({
   '& .MuiDrawer-paper': {
@@ -45,9 +46,7 @@ function NotificationPanel(props) {
   const location = useLocation();
   const dispatch = useDispatch();
   const organization = useSelector(({ expensedaoorg }) => expensedaoorg?.organization);
-  //const [orgId, setOrgId] = useState();
-  const {setContractId, message } = useEvents('', 3);
-  //let events;
+  const { kit, address, network, performActions } = useCelo();
   const state = useSelector(({ notificationPanel }) => notificationPanel.state);
   const notifications = useSelector(selectNotifications);
 
@@ -55,10 +54,47 @@ function NotificationPanel(props) {
 
   useEffect(() => {
     console.log("NOTIFICATION refresh");
-    if (organization && organization.id) {
-      console.log("NOTIFICATION refresh all good");
-      setContractId(organization.id);
-      //events = useEvents(organization.id, 5);
+    if (organization && organization.contract) {
+      const response = kit.connection.web3.eth.clearSubscriptions();
+      console.log(response);
+      console.log("subscribed");
+      organization.contract.events.allEvents({
+      //   filter: {
+      //     value: [],
+      // },
+      fromBlock: 'latest'
+      }, function(error, event){ })
+      .on('data', function(event){
+          console.log("data");
+          console.log(event);
+          if (event.event === undefined) {
+          organization.contract.getPastEvents("allEvents", {
+            fromBlock: event.blockNumber,
+            toBlock: 'latest'}, function(error, events){
+              console.log(events);
+              createNotification({
+                message: "NEW EVENT",
+                options: { variant: 'success' },
+              });
+            });
+          } else {
+            createNotification({
+              message: "NEW EVENT",
+              options: { variant: 'success' },
+            });
+          }
+
+      })
+      .on('changed', function(event){
+          // remove event from local database
+      })
+      .on('error', function(error, receipt) { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
+          console.log(error);
+      })
+      .on("connected", function(subscriptionId){
+        console.log("connected");
+        console.log(subscriptionId);
+      });
     }
   }, [organization]);
 
@@ -68,20 +104,6 @@ function NotificationPanel(props) {
   function createNotification(obj) {
     dispatch(addNotification(NotificationModel(obj)));
   };
-
-  useEffect(() => {
-    console.log("MESSAGE", message);
-    if (message && message !== '') {
-      if ((organization.isAdmin && message.indexOf('New') !== -1) ||
-        (!organization.isAdmin && message.indexOf('approved') !== -1)) {
-        createNotification({
-          message: message,
-          options: { variant: 'success' },
-        });
-        dispatch(getWidgets(organization.id));
-      }
-    }
-  }, [dispatch, message]);
 
   useEffect(() => {
     notifications.forEach((item) => {

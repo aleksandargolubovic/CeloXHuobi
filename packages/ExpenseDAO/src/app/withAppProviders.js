@@ -21,13 +21,13 @@ const withAppProviders = (Component) => (props) => {
         title: <span>Connect your Wallet</span>,
         providersOptions: {
           // This option hides specific wallets from the default list
-          hideFromDefaults: [
-            SupportedProviders.MetaMask,
-            SupportedProviders.PrivateKey,
-            SupportedProviders.CeloExtensionWallet,
-            SupportedProviders.Valora,
-            SupportedProviders.Ledger,
-          ],
+          // hideFromDefaults: [
+          //   SupportedProviders.MetaMask,
+          //   SupportedProviders.PrivateKey,
+          //   SupportedProviders.CeloExtensionWallet,
+          //   SupportedProviders.Valora,
+          //   SupportedProviders.Ledger,
+          // ],
     
           // This option hides all default wallets
           //hideFromDefaults: true,

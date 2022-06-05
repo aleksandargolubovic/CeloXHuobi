@@ -8,6 +8,9 @@ import { motion } from 'framer-motion';
 import { useFormContext } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { addNotification } from 'app/fuse-layouts/shared-components/notificationPanel/store/dataSlice';
+import NotificationModel from 'app/fuse-layouts/shared-components/notificationPanel/model/NotificationModel';
+
 import _ from '@lodash';
 import { addToIPFS, retrieveFile } from "./helpers/web3Storage";
 import { useCelo } from '@celo/react-celo';
@@ -95,15 +98,21 @@ function NewRequestHeader(props) {
             .send({ from: address, gasLimit });
   
           console.log(result);
+          setButtonLoading(false);
+          dispatch(addNotification(NotificationModel({
+            message: "New request created!",
+            options: { variant: 'success' },
+          })));
   
           const variant = result.status == true ? "success" : "error";
           const url = `${network.explorer}/tx/${result.transactionHash}`;
+          
+          //navigate('/apps/expensedao/requests');
         });
       } catch (e) {
         console.log(e);
+        setButtonLoading(false);
       }
-
-      setButtonLoading(false);
 
     }, function (err) {
       console.log(err);

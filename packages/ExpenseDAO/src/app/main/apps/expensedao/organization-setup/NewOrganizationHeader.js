@@ -7,9 +7,13 @@ import { useFormContext } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import _ from '@lodash';
-import { saveOrganization, removeOrganization } from '../store/organizationSlice';
+import { newOrganization, getOrganization } from '../store/organizationSlice';
 import { useCelo } from '@celo/react-celo';
 import expenseDAOFactory from "app/contracts/ExpenseDAOFactory.json";
+import registry from "app/contracts/Registry.json";
+import expenseDAO from "app/contracts/ExpenseDAO.json";
+
+const NULL_ADDR = '0x0000000000000000000000000000000000000000';
 
 function NewOrganizationHeader(props) {
   const dispatch = useDispatch();
@@ -22,6 +26,7 @@ function NewOrganizationHeader(props) {
   const theme = useTheme();
   const navigate = useNavigate();
   const { kit, address, network, performActions } = useCelo();
+
   
   const createNewOrganization = async() => {
     try {
@@ -46,6 +51,28 @@ function NewOrganizationHeader(props) {
 
         const variant = result.status == true ? "success" : "error";
         const url = `${network.explorer}/tx/${result.transactionHash}`;
+
+        dispatch(newOrganization());
+
+        const registryContract = new kit.connection.web3.eth.Contract(
+          registry.abi,
+          registry.address
+        );
+        let response = await registryContract.methods.organizations(parameters.name).call();
+        console.log(response);
+        
+        if (response === NULL_ADDR) {
+          dispatch(showMessage({ message: "Organization doesn't exist" }));
+        } else {
+          const daoContract = new kit.connection.web3.eth.Contract(
+            expenseDAO.abi,
+            response
+          );
+          console.log("DAO CONTRACT", daoContract);
+          dispatch(getOrganization({address: response, name: parameters.name, contract: daoContract})).then((action) => {
+            navigate('/apps/expensedao/organization');
+          });
+        }
       });
     } catch (e) {
       console.log(e);

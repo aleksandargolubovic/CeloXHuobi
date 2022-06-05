@@ -1,11 +1,6 @@
-//import { BigNumber } from '@hashgraph/hethers';
 import { useState, useCallback } from 'react';
 import { useOnRepetition } from "./useOnRepetition";
-// import {
-//   getProvider,
-//   getSigner } from 'app/services/hedera/providers/hashconnectProvider';
 
-// import instance from "app/services/hedera/expenseService/expenseService";
 const getEvents = async (contractID) => {
   if (contractID !== '') {
     //const message = await instance.getEventsFromMirror(contractID);

@@ -12,19 +12,46 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { logoutUser } from 'app/auth/store/userSlice';
 import { useCelo } from '@celo/react-celo';
+import { useBalance } from 'app/services/hooks';
+import Web3 from 'web3';
 
-//import { useBalance, getPrice, useExchangeHbarPrice } from 'app/services/hedera/hooks';
+const CELO = 0;
+const cUSD = 1;
+const cEUR = 2;
+const cREAL = 3;
+const currencies = ['CELO', 'cUSD', 'cEUR', 'cREAL'];
+
+const nextCurrency = (current) => {
+  if (current == cREAL) {
+    return CELO;
+  }
+  return current + 1;
+}
 
 function UserMenu(props) {
-  const { destroy, network } = useCelo();
+  const { destroy, network, kit, address } = useCelo();
   const dispatch = useDispatch();
   const user = useSelector(({ auth }) => auth.user);
   const navigate = useNavigate();
-  const balance = "5";//useBalance(2);
-  const [priceInUSD, setPriceInUSD] = useState(false);
-  const price = "11";//useExchangeHbarPrice(2);
+  const balance = useBalance(kit, address, 5);
+  const [selectedBalance, setSelectedBalance] = useState(CELO);
+  //const [priceInUSD, setPriceInUSD] = useState(false);
+  //const price = "11";//useExchangeHbarPrice(2);
 
   const [userMenu, setUserMenu] = useState(null);
+
+  const balanceToShow = (selected) => {
+    switch (selected) {
+      case CELO:
+        return balance.CELO;
+      case cUSD:
+        return balance.cUSD;
+      case cEUR:
+        return balance.cEUR;
+      case cREAL:
+        return balance.cREAL;
+    }
+  };
 
   const userMenuClick = (event) => {
     setUserMenu(event.currentTarget);
@@ -41,15 +68,13 @@ function UserMenu(props) {
       <Button
         className="min-h-40 min-w-40 px-0 md:px-16 py-0 md:py-6"
         onClick={() => {
-          setPriceInUSD(!priceInUSD);
+          setSelectedBalance(nextCurrency(selectedBalance));
         }}
         color="inherit"
       >
         <div className="hidden md:flex flex-col mx-4 items-end">
           <Typography component="span" className="font-semibold flex">
-            {priceInUSD ? 
-              parseFloat(parseFloat(balance) * parseFloat(price)).toFixed(2) + " $"
-              : balance.toString() + " ℏ"}
+              {parseFloat(Web3.utils.fromWei(balanceToShow(selectedBalance).toString(), 'ether')).toFixed(4) + " " + currencies[selectedBalance]}
           </Typography>
         </div>
       </Button>

@@ -20,7 +20,7 @@ export const useOnRepetition = (callback, options, ...args) => {
     const polling = (options === null || options === void 0 ? void 0 : options.pollTime) && options.pollTime > 0;
     const leadingCall = useRef(true);
     // created a strigified args to use for deps
-    const argDeps = JSON.stringify(args !== null && args !== void 0 ? args : []);
+    //const argDeps = JSON.stringify(args !== null && args !== void 0 ? args : []);
     // save the input function provided
     const callFunctionWithArgs = useCallback(() => {
         if (callback) {
@@ -32,7 +32,7 @@ export const useOnRepetition = (callback, options, ...args) => {
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [callback, argDeps, args]);
+    }, [callback, args]);
     // Turn on the listener if we have a function & a provider
     const listener = useCallback((_blockNumber) => {
         if (options.provider)

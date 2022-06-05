@@ -8,7 +8,6 @@ const PROCESSING = "Pending";
 
 
 const decodeCategory = (categoryNum) => {
-  console.log(categoryNum);
   switch (categoryNum) {
     case '1':
       return 'Equipment';

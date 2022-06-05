@@ -59,11 +59,11 @@ function NewOrganization(props) {
     dispatch(newOrganization());
   }, [dispatch]);
 
-  useEffect(() => {
-    return () => {
-      dispatch(resetOrganization());
-    };
-  }, [dispatch]);
+  // useEffect(() => {
+  //   return () => {
+  //     dispatch(resetOrganization());
+  //   };
+  // }, [dispatch]);
 
   return (
     <FormProvider {...methods}>

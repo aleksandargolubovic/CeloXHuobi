@@ -5,18 +5,12 @@ import Web3 from 'web3';
 export const getWidgets =
   createAsyncThunk('organizationDashboard/widgets/getWidgets', 
                     async (params) => {
-  console.log("PARAMS2", params);
 
   let defaultResponse = await axios.get('/api/expensedao/widgets');
   let data = await defaultResponse.data;
-  console.log(data);                 
 
   const response = await params.contract.methods.getSummary().call();
-  console.log(response);
-
-  const balance = 5;//await instance.getContractBalance(organizationID);
   let totalBalance = await params.kit.getTotalBalance(params.contract._address);
-  console.log("totalbalance", totalBalance);
 
   // Set total requests.
   data[0].data.count = response.requestsNum;
@@ -33,7 +27,6 @@ export const getWidgets =
 
   // Set budget distribution. If there are no requests, use default pie chart.
   if (response.requestsNum > 0) {
-    console.log("there are requests");
     data[4].mainChart.series = [
       response.category1 / response.requestsNum,
       response.category2 / response.requestsNum,
@@ -50,7 +43,7 @@ export const getWidgets =
       'Travel',
       'Other'];
   }
-  console.log(data);
+
   // Set 'spent' widget.
   data[6].totalSpent.count = (parseFloat(response.paidTotal).toFixed(4)).toString();
   data[6].remaining.count = parseFloat(Web3.utils.fromWei(totalBalance.cUSD.toString(), 'ether')).toFixed(4);

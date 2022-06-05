@@ -61,7 +61,7 @@ function BasicInfoTab(props) {
               value={value}
               onChange={(event, newValue) => {
                 onChange(newValue);
-                if (newValue.length == 0)
+                if (newValue.length === 0)
                   document.getElementById("csvFileInputApprovers").value = "";
               }}
               renderInput={(params) => (
@@ -79,9 +79,9 @@ function BasicInfoTab(props) {
             />
             <input
               className="flex flex-1 mx-8"
-              type={"file"}
-              id={"csvFileInputApprovers"}
-              accept={".csv"}
+              type="file"
+              id="csvFileInputApprovers"
+              accept=".csv"
               onChange={async (e) => {
                 const approversList = await readCSVFileAsync(e.target.files[0]);
                 onChange(approversList.slice(0, -1));
@@ -106,7 +106,7 @@ function BasicInfoTab(props) {
               value={value}
               onChange={(event, newValue) => {
                 onChange(newValue);
-                if (newValue.length == 0)
+                if (newValue.length === 0)
                   document.getElementById("csvFileInputMembers").value = "";
               }}
               renderInput={(params) => (
@@ -124,9 +124,9 @@ function BasicInfoTab(props) {
             />
             <input
               className="flex flex-1 mx-8"
-              type={"file"}
-              id={"csvFileInputMembers"}
-              accept={".csv"}
+              type="file"
+              id="csvFileInputMembers"
+              accept=".csv"
               onChange={async (e) => {
                 const approversList = await readCSVFileAsync(e.target.files[0]);
                 onChange(approversList.slice(0, -1));

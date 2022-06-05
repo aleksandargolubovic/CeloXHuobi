@@ -6,6 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
+import Blockies from "react-blockies";
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,12 +21,15 @@ function OrganizationDashboardHeader(props) {
   const widgets = useSelector(selectWidgets);
   const user = useSelector(({ auth }) => auth.user);
   const organization = useSelector(({ expensedaoorg }) => expensedaoorg.organization);
+  const displayAddress = organization.id?.substr(0, 5) + "..." + organization.id?.substr(-4);
 
   return (
     <div className="flex justify-between flex-1 min-w-0 px-24">
       <div className="flex justify-between items-center">
         <div className="flex items-center min-w-0">
-          <Avatar className="w-52 h-52 sm:w-64 sm:h-64">{organization.name}</Avatar>
+          <Avatar className="w-52 h-52 sm:w-64 sm:h-64">
+            <Blockies size={16} seed={organization.id.toLowerCase()} />
+          </Avatar>
           <div className="mx-12 min-w-0">
             <Typography className="text-18 sm:text-24 md:text-32 font-bold leading-none mb-8 tracking-tight">
               {organization.name}
@@ -33,7 +37,7 @@ function OrganizationDashboardHeader(props) {
 
             <div className="flex items-center opacity-60 truncate">
               <Typography className="text-12 sm:text-14 font-medium mx-4 truncate">
-                {organization.id}
+                {displayAddress}
               </Typography>
             </div>
           </div>

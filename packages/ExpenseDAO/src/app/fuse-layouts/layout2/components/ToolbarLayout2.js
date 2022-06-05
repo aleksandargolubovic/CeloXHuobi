@@ -1,6 +1,5 @@
 import FuseSearch from '@fuse/core/FuseSearch';
 import { ThemeProvider } from '@mui/material/styles';
-import FuseShortcuts from '@fuse/core/FuseShortcuts';
 import AppBar from '@mui/material/AppBar';
 import Hidden from '@mui/material/Hidden';
 import Toolbar from '@mui/material/Toolbar';
@@ -35,12 +34,6 @@ function ToolbarLayout2(props) {
               <NavbarToggleButton className="w-40 h-40 p-0 mx-0 sm:mx-8" />
             </Hidden>
           )}
-
-          <div className="flex flex-1">
-            <Hidden lgDown>
-              <FuseShortcuts />
-            </Hidden>
-          </div>
 
           <div className="flex items-center px-8 h-full overflow-x-auto">
             <LanguageSwitcher />

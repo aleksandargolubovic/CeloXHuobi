@@ -2,6 +2,7 @@ import AppBar from '@mui/material/AppBar';
 import { styled } from '@mui/material/styles';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
+import Blockies from "react-blockies";
 import { useSelector } from 'react-redux';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
@@ -27,6 +28,7 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 
 function UserNavbarHeader(props) {
   const user = useSelector(({ auth }) => auth.user);
+  const displayAddress = user.data.displayName?.substr(0, 5) + "..." + user.data.displayName?.substr(-4);
 
   return (
     <StyledAppBar
@@ -35,7 +37,7 @@ function UserNavbarHeader(props) {
       className="user relative flex flex-col items-center justify-center pt-24 pb-64 mb-32 z-0 shadow-0"
     >
       <Typography className="username text-18 whitespace-nowrap font-semibold mb-4" color="inherit">
-        {user.data.displayName}
+        {displayAddress}
       </Typography>
       <Typography
         className="email text-13 opacity-50 whitespace-nowrap font-medium"
@@ -45,14 +47,11 @@ function UserNavbarHeader(props) {
       </Typography>
       <div className="flex items-center justify-center absolute bottom-0 -mb-44">
         <Avatar
-          className="avatar w-72 h-72 p-8 box-content"
+          className="avatar w-56 h-56 p-8 box-content"
           alt="user photo"
-          src={
-            user.data.photoURL && user.data.photoURL !== ''
-              ? user.data.photoURL
-              : 'assets/images/avatars/profile.jpg'
-          }
-        />
+        >
+          <Blockies size={20} seed={user.data.displayName.toLowerCase()} />
+        </Avatar>
       </div>
     </StyledAppBar>
   );

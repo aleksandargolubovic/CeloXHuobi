@@ -1,6 +1,5 @@
 import FuseSearch from '@fuse/core/FuseSearch';
 import { ThemeProvider } from '@mui/material/styles';
-import FuseShortcuts from '@fuse/core/FuseShortcuts';
 import AppBar from '@mui/material/AppBar';
 import Hidden from '@mui/material/Hidden';
 import Toolbar from '@mui/material/Toolbar';
@@ -51,10 +50,6 @@ function ToolbarLayout1(props) {
                 </Hidden>
               </>
             )}
-
-            <Hidden lgDown>
-              <FuseShortcuts />
-            </Hidden>
           </div>
 
           <div className="flex items-center px-8 h-full overflow-x-auto">

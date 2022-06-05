@@ -6,6 +6,7 @@ import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
+import Blockies from "react-blockies";
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -33,6 +34,8 @@ function UserMenu(props) {
     setUserMenu(null);
   };
 
+  const displayAddress = user.data.displayName?.substr(0, 5) + "..." + user.data.displayName?.substr(-4);
+
   return (
     <>
       <Button
@@ -58,18 +61,13 @@ function UserMenu(props) {
       >
         <div className="hidden md:flex flex-col mx-4 items-end">
           <Typography component="span" className="font-semibold flex">
-            {user.data.displayName}
+            {displayAddress}
           </Typography>
           <Typography className="text-11 font-medium capitalize" color="textSecondary">
             {network.name}
           </Typography>
         </div>
-
-        {user.data.photoURL ? (
-          <Avatar className="md:mx-4" alt="user photo" src={user.data.photoURL} />
-        ) : (
-          <Avatar className="md:mx-4">{user.data.displayName[0]}</Avatar>
-        )}
+        <Avatar className="md:mx-4"><Blockies size={18} seed={user.data.displayName.toLowerCase()} /></Avatar>
       </Button>
 
       <Popover

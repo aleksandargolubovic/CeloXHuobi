@@ -9,14 +9,15 @@ export const getOrganization =
   async (params, {getState}) => {
 
   const isAdmin = await params.contract.methods.isApprover().call();
-  console.log("IS ADMIN", isAdmin);
+  // console.log("IS ADMIN", isAdmin);
   const organization = {
     id: params.address,
     name: params.name,
     isAdmin: isAdmin,
     contract: params.contract,
+    currency: params.currency
   };
-  console.log("NEW STATE", organization);
+  // console.log("NEW STATE", organization);
   return organization;
 });
 
@@ -67,12 +68,13 @@ const organizationSlice = createSlice({
       reducer: (state, action) => action.payload,
       prepare: (event) => ({
         payload: {
-          id: '0.0.0',
+          id: '',
           name: '',
           approvers: [],
           members: [],
           images: [],
           active: true,
+          currency: 'cUSD'
         },
       }),
     },

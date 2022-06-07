@@ -10,7 +10,9 @@ export const getWidgets =
   let data = await defaultResponse.data;
 
   const response = await params.contract.methods.getSummary().call();
-  let totalBalance = await params.kit.getTotalBalance(params.contract._address);
+  const totalBalance = await params.kit.getTotalBalance(params.contract._address);
+  const balanceInCurrency =
+    params.currency === 'cEUR' ? totalBalance.cEUR : totalBalance.cUSD;
 
   // Set total requests.
   data[0].data.count = response.requestsNum;
@@ -45,11 +47,11 @@ export const getWidgets =
   }
 
   // Set 'spent' widget.
-  data[6].totalSpent.count = (parseFloat(response.paidTotal).toFixed(4)).toString();
-  data[6].remaining.count = parseFloat(Web3.utils.fromWei(totalBalance.cUSD.toString(), 'ether')).toFixed(4);
+  data[6].totalSpent.count = (parseFloat(response.paidTotal).toFixed(4));
+  data[6].remaining.count = parseFloat(Web3.utils.fromWei(balanceInCurrency.toString(), 'ether')).toFixed(4);
   const sum = parseFloat(data[6].totalSpent.count)
     + parseFloat(data[6].remaining.count);
-  data[6].totalBudget.count = sum.toFixed(4).toString();
+  data[6].totalBudget.count = sum.toFixed(4);
   return data;
 });
 

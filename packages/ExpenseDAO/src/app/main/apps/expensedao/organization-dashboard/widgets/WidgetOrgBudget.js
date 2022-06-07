@@ -26,7 +26,7 @@ function WidgetOrgBudget(props) {
             </Typography>
             <div className="flex items-center">
               <Typography className="text-32 font-normal" color="textSecondary">
-                 ℏ
+                 {props.currency}
               </Typography>
               <Typography className="text-32 mx-4 font-medium tracking-tighter">
                 {widget[id].count}
@@ -52,7 +52,7 @@ function WidgetOrgBudget(props) {
         </Typography>
         <div className="flex items-center">
           <Typography className="text-32 font-normal" color="textSecondary">
-            ℏ
+            {props.currency}
           </Typography>
           <Typography className="text-32 mx-4 font-medium tracking-tighter">
             {widget.totalBudget.count}

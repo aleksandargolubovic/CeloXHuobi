@@ -31,7 +31,10 @@ function OrganizationDashboard(props) {
   const [tabValue, setTabValue] = useState(0);
 
   useEffect(() => {
-    dispatch(getWidgets({contract: organization.contract, kit: kit }));
+    dispatch(getWidgets({
+      contract: organization.contract,
+      kit: kit,
+      currency: organization.currency }));
   }, [dispatch]);
 
   function handleChangeTab(event, value) {

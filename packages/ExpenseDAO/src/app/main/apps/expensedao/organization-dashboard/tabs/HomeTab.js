@@ -12,6 +12,7 @@ import WidgetReqPieChart from '../widgets/WidgetReqPieChart';
 import WidgetReqNum from '../widgets/WidgetReqNum';
 import Web3 from 'web3';
 import { useCelo } from '@celo/react-celo';
+import { StableToken } from '@celo/contractkit';
 
 function HomeTab() {
   const [amount, setAmount] = useState('');
@@ -40,7 +41,19 @@ function HomeTab() {
   const sendFunds = async() => {
     try {    
       await performActions(async (k) => {
-        const stableToken = await k.contracts.getStableToken();
+        let stableTokenEnum;
+        switch (organization.currency) {
+          case 'cUSD':
+            stableTokenEnum = StableToken.cUSD;
+            break;
+          case 'cEUR':
+            stableTokenEnum = StableToken.cEUR;
+            break;
+          default:
+            stableTokenEnum = StableToken.cUSD;
+            break;
+        }
+        const stableToken = await k.contracts.getStableToken(stableTokenEnum);
         const result = await stableToken
           .transfer(
             // impact market contract
@@ -59,7 +72,10 @@ function HomeTab() {
     }
 
     setAmount(0);
-    dispatch(getWidgets({contract: organization.contract, kit: kit }));
+    dispatch(getWidgets({
+      contract: organization.contract,
+      kit: kit,
+      currency: organization.currency }));
   }
 
   return (
@@ -80,7 +96,7 @@ function HomeTab() {
         <WidgetReqPieChart widget={widgets.widget7} />
       </motion.div>
       <motion.div variants={item} className="widget flex w-full sm:w-1/2 p-12">
-        <WidgetOrgBudget widget={widgets.widget9} />
+        <WidgetOrgBudget widget={widgets.widget9} currency={organization.currency} />
       </motion.div>
       <motion.div variants={item} className="widget flex w-full p-12">
         <Paper className="w-full rounded-20 shadow">
@@ -95,7 +111,7 @@ function HomeTab() {
                 id="amountToSend"
                 value={amount}
                 InputProps={{
-                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  startAdornment: <InputAdornment position="start">{organization.currency}</InputAdornment>,
                 }}
                 type="number"
                 variant="outlined"

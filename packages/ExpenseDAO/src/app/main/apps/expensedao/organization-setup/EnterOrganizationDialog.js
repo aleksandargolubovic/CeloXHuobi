@@ -17,6 +17,7 @@ import { useForm, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import _ from '@lodash';
 import { useCelo } from '@celo/react-celo';
+import { StableToken } from '@celo/contractkit';
 import registry from "app/contracts/Registry.json";
 import expenseDAO from "app/contracts/ExpenseDAO.json";
 /**
@@ -46,8 +47,6 @@ function EnterOrganizationDialog(props) {
     registry.address
   );
 
-  console.log("TEST", contract);
-
   const { isValid, dirtyFields, errors } = formState;
 
   function handleOpenDialog() {
@@ -76,8 +75,18 @@ function EnterOrganizationDialog(props) {
         expenseDAO.abi,
         response
       );
-      console.log("DAO CONTRACT", daoContract);
-      dispatch(getOrganization({address: response, name: data.name, contract: daoContract})).then((action) => {
+      const stableCoinAddress = await daoContract.methods.stableCoinAddress().call();
+      const cEURAddress = await kit.celoTokens.getAddress(StableToken.cEUR);
+      let currency = 'cUSD';
+      if (stableCoinAddress === cEURAddress) {
+        currency = 'cEUR';
+      }
+      dispatch(getOrganization({
+        address: response,
+        name: data.name,
+        contract: daoContract,
+        currency: currency})).then((action) => {
+
         props.setOpenDialog(false);
         navigate('/apps/expensedao/organization');
       });

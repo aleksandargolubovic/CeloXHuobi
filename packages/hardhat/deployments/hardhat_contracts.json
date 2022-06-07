@@ -167,7 +167,7 @@
       "chainId": "44787",
       "contracts": {
         "ExpenseDAOFactory": {
-          "address": "0xA3F8548637D4BdC31c4674ACEaf73FD8acB64288",
+          "address": "0xBC91F9AC3a62134c78D02d8524b123C09d3412Ef",
           "abi": [
             {
               "inputs": [
@@ -291,7 +291,7 @@
           ]
         },
         "Registry": {
-          "address": "0xd238a679fD7025b82282B5b53B8A16e454a6c717",
+          "address": "0x149c9B67707f1b31A09DA00d446160df82cAfdBc",
           "abi": [
             {
               "anonymous": false,

@@ -81,7 +81,13 @@ function NewOrganizationHeader(props) {
             response
           );
           console.log("DAO CONTRACT", daoContract);
-          dispatch(getOrganization({address: response, name: parameters.name, contract: daoContract})).then((action) => {
+
+          dispatch(getOrganization({
+            address: response,
+            name: parameters.name,
+            contract: daoContract,
+            currency: parameters.currency,
+          })).then((action) => {
             navigate('/apps/expensedao/organization');
           });
         }

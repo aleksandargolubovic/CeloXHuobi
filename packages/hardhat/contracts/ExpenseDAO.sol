@@ -16,7 +16,7 @@ contract ExpenseDAO is ReentrancyGuard, AccessControlEnumerable {
   uint256 private approvedRequests;
   uint256 private paidOut;
 
-  address private stableCoinAddress;
+  address public stableCoinAddress;
 
   struct ReimbursementRequest {
     uint256 id;

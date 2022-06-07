@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import _ from '@lodash';
 import { newOrganization, getOrganization } from '../store/organizationSlice';
+import { StableToken } from '@celo/contractkit';
 import { useCelo } from '@celo/react-celo';
 import expenseDAOFactory from "app/contracts/ExpenseDAOFactory.json";
 import registry from "app/contracts/Registry.json";
@@ -27,24 +28,35 @@ function NewOrganizationHeader(props) {
   const navigate = useNavigate();
   const { kit, address, network, performActions } = useCelo();
 
-  
   const createNewOrganization = async() => {
     try {
       const contract = new kit.connection.web3.eth.Contract(
         expenseDAOFactory.abi,
         expenseDAOFactory.address
       );
-    
-      //console.log("TEST", contract);
+
       const parameters = getValues();
+
+      let stableTokenAddress = NULL_ADDR;
+      switch (parameters.currency) {
+        case 'cUSD':
+          stableTokenAddress = await kit.celoTokens.getAddress(StableToken.cUSD);
+          break;
+        case 'cEUR':
+          stableTokenAddress = await kit.celoTokens.getAddress(StableToken.cEUR);
+          break;
+        default:
+          break;
+      }
       await performActions(async (kit) => {
-        const gasLimit = await contract.methods
-          .newExpenseOrg(
-            parameters.name, parameters.approvers, parameters.members)
+        const gasLimit = await contract.methods.newExpenseOrg(
+            parameters.name, stableTokenAddress, parameters.approvers,
+            parameters.members)
           .estimateGas();
 
         const result = await contract.methods.newExpenseOrg(
-          parameters.name, parameters.approvers, parameters.members)
+          parameters.name, stableTokenAddress, parameters.approvers,
+          parameters.members)
           .send({ from: address, gasLimit });
 
         console.log(result);
@@ -69,7 +81,13 @@ function NewOrganizationHeader(props) {
             response
           );
           console.log("DAO CONTRACT", daoContract);
-          dispatch(getOrganization({address: response, name: parameters.name, contract: daoContract})).then((action) => {
+
+          dispatch(getOrganization({
+            address: response,
+            name: parameters.name,
+            contract: daoContract,
+            currency: parameters.currency,
+          })).then((action) => {
             navigate('/apps/expensedao/organization');
           });
         }

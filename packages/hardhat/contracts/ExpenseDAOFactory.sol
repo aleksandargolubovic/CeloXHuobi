@@ -13,11 +13,12 @@ contract ExpenseDAOFactory {
 
   function newExpenseOrg(
     string calldata name,
+    address stableCoin,
     address[] calldata approvers,
     address[] calldata members)
     external returns (ExpenseDAO r) {
 
-    r = new ExpenseDAO(approvers, members);
+    r = new ExpenseDAO(stableCoin, approvers, members);
     registry.register(name, r, msg.sender);
   }
 }

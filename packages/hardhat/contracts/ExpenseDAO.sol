@@ -1,19 +1,22 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 
-contract ExpenseDAO is ReentrancyGuard, AccessControl {
+contract ExpenseDAO is ReentrancyGuard, AccessControlEnumerable {
   // User roles.
   bytes32 public constant MEMBER_ROLE = keccak256("MEMBER");
   bytes32 public constant APPROVER_ROLE = keccak256("APPROVER");
 
-  uint256 public numOfRequests;
-  uint256 public deniedRequests;
-  uint256 public approvedRequests;
-  uint256 public paidOut;
+  uint256 private numOfRequests;
+  uint256 private deniedRequests;
+  uint256 private approvedRequests;
+  uint256 private paidOut;
+
+  address public stableCoinAddress;
 
   struct ReimbursementRequest {
     uint256 id;
@@ -40,7 +43,7 @@ contract ExpenseDAO is ReentrancyGuard, AccessControl {
     address indexed approver,
     address indexed reimbursementAddress,
     uint256 amount);
-  
+
   event BalanceIncreased(address indexed fromAddress, uint256 amount);
 
   // Modifiers.
@@ -56,11 +59,16 @@ contract ExpenseDAO is ReentrancyGuard, AccessControl {
 
   // Constructor.
   constructor(
+    address stableToken,
     address[] memory approvers,
     address[] memory members) {
     
+    // Set stable token address. Usually, it would be either cUSD or cEUR.
+    stableCoinAddress = stableToken;
+
     for (uint256 i = 0; i < approvers.length; i++) {
       _setupRole(APPROVER_ROLE, approvers[i]);
+      _setupRole(DEFAULT_ADMIN_ROLE, approvers[i]);
     }
 
     for (uint256 i = 0; i < members.length; i++) {
@@ -142,7 +150,11 @@ contract ExpenseDAO is ReentrancyGuard, AccessControl {
       request.reimbursementAddress,
       request.amount);
 
-    return request.reimbursementAddress.transfer(request.amount);
+    bool success = IERC20(stableCoinAddress).transfer(
+      request.reimbursementAddress,
+      request.amount);
+    require(success);
+    // return request.reimbursementAddress.transfer(request.amount);
   }
 
   // Used to increase balance of the contract.
@@ -207,7 +219,7 @@ contract ExpenseDAO is ReentrancyGuard, AccessControl {
     
     requests = new ReimbursementRequest[](numOfRequests);
     for (uint256 index = 0; index < numOfRequests; index++) {
-        requests[index] = reimbursementRequests[index];
+      requests[index] = reimbursementRequests[index];
     }
   }
 
@@ -218,5 +230,45 @@ contract ExpenseDAO is ReentrancyGuard, AccessControl {
     returns (ReimbursementRequest memory) {
 
     return reimbursementRequests[requestId];
+  }
+
+  // Returns a list of members.
+  function getMembers()
+    public
+    view
+    returns (address[] memory members) {
+
+    uint256 membersCount = getRoleMemberCount(MEMBER_ROLE);
+    members = new address[](membersCount);
+
+    for (uint256 index = 0; index < membersCount; index++) {
+      members[index] = getRoleMember(MEMBER_ROLE, index);
+    }
+  }
+
+  // Returns a list of approvers.
+  function getApprovers()
+    public
+    view
+    returns (address[] memory approvers) {
+
+    uint256 approversCount = getRoleMemberCount(APPROVER_ROLE);
+    approvers = new address[](approversCount);
+
+    for (uint256 index = 0; index < approversCount; index++) {
+      approvers[index] = getRoleMember(APPROVER_ROLE, index);
+    }
+  }
+
+  function addMember(address member)
+  external
+  onlyApprover("Only approver can add new members") {
+    _setupRole(MEMBER_ROLE, member);
+  }
+
+  function removeMember(address member)
+  external
+  onlyApprover("Only approver can remove members") {
+    _revokeRole(MEMBER_ROLE, member);
   }
 }

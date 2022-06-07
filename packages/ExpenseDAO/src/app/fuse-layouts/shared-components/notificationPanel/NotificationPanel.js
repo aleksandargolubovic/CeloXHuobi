@@ -55,6 +55,7 @@ function NotificationPanel(props) {
   useEffect(() => {
     console.log("NOTIFICATION refresh");
     if (organization && organization.contract) {
+      console.log("NOTIFICATION refresh success");
       const response = kit.connection.web3.eth.clearSubscriptions();
       console.log(response);
       console.log("subscribed");

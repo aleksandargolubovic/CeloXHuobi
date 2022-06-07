@@ -166,6 +166,69 @@
       "name": "alfajores",
       "chainId": "44787",
       "contracts": {
+        "ExpenseDAOFactory": {
+          "address": "0xBC91F9AC3a62134c78D02d8524b123C09d3412Ef",
+          "abi": [
+            {
+              "inputs": [
+                {
+                  "internalType": "contract Registry",
+                  "name": "reg",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "constructor"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "string",
+                  "name": "name",
+                  "type": "string"
+                },
+                {
+                  "internalType": "address",
+                  "name": "stableCoin",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address[]",
+                  "name": "approvers",
+                  "type": "address[]"
+                },
+                {
+                  "internalType": "address[]",
+                  "name": "members",
+                  "type": "address[]"
+                }
+              ],
+              "name": "newExpenseOrg",
+              "outputs": [
+                {
+                  "internalType": "contract ExpenseDAO",
+                  "name": "r",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "registry",
+              "outputs": [
+                {
+                  "internalType": "contract Registry",
+                  "name": "",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            }
+          ]
+        },
         "Greeter": {
           "address": "0xc7576A90cE35cb1614EdA509ee766Ea7377b5759",
           "abi": [
@@ -228,7 +291,7 @@
           ]
         },
         "Registry": {
-          "address": "0x218C7Bc23F0d9dd94E83Eb1DF7714820a618E9B1",
+          "address": "0x149c9B67707f1b31A09DA00d446160df82cAfdBc",
           "abi": [
             {
               "anonymous": false,
@@ -345,64 +408,6 @@
               "name": "store",
               "outputs": [],
               "stateMutability": "nonpayable",
-              "type": "function"
-            }
-          ]
-        },
-        "ExpenseDAOFactory": {
-          "address": "0xB3AFe346d8F8FcAA59CCC16A343b4a35e6447746",
-          "abi": [
-            {
-              "inputs": [
-                {
-                  "internalType": "contract Registry",
-                  "name": "reg",
-                  "type": "address"
-                }
-              ],
-              "stateMutability": "nonpayable",
-              "type": "constructor"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "string",
-                  "name": "name",
-                  "type": "string"
-                },
-                {
-                  "internalType": "address[]",
-                  "name": "approvers",
-                  "type": "address[]"
-                },
-                {
-                  "internalType": "address[]",
-                  "name": "members",
-                  "type": "address[]"
-                }
-              ],
-              "name": "newExpenseOrg",
-              "outputs": [
-                {
-                  "internalType": "contract ExpenseDAO",
-                  "name": "r",
-                  "type": "address"
-                }
-              ],
-              "stateMutability": "nonpayable",
-              "type": "function"
-            },
-            {
-              "inputs": [],
-              "name": "registry",
-              "outputs": [
-                {
-                  "internalType": "contract Registry",
-                  "name": "",
-                  "type": "address"
-                }
-              ],
-              "stateMutability": "view",
               "type": "function"
             }
           ]

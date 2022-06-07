@@ -127,7 +127,7 @@ function BasicInfoTab(props) {
                           Tesseract.recognize(
                             src,
                             'eng',
-                            { logger: m => console.log(m) }
+                            // { logger: m => console.log(m) }
                           ).then(({ data: { text } }) => {
                             console.log(text);
                             let totalPosition = text.indexOf("Total") + 6;

@@ -1,7 +1,12 @@
 import React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import MenuItem from '@mui/material/MenuItem';
 import { useFormContext, Controller } from 'react-hook-form';
+
+const currencies = [
+  "cUSD", "cEUR"
+];
 
 function readCSVFileAsync(file) {
   return new Promise((resolve, reject) => {
@@ -134,6 +139,29 @@ function BasicInfoTab(props) {
             />
             <br />
           </>
+        )}
+      />
+
+      <Controller
+        name="currency"
+        control={control}
+        defaultValue=''
+        render={({ field }) => (
+          <TextField
+            fullWidth
+            required
+            select
+            label="Choose Currency"
+            id="currency"
+            variant="outlined"
+            {...field}
+          >
+            {currencies.map((currency) => (
+              <MenuItem key={currency} value={currency}>
+                {currency}
+              </MenuItem>
+            ))}
+          </TextField>
         )}
       />
     </div>

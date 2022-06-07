@@ -19,7 +19,7 @@ function HomeTab() {
   const widgets = useSelector(selectWidgets);
   const organization = useSelector(({ expensedaoorg }) => expensedaoorg.organization);
   const { kit, address, performActions } = useCelo();
-  //const events = useEvents(organization.id, 1);
+
   const container = {
     show: {
       transition: {

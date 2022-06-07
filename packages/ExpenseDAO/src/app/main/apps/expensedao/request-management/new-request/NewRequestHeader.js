@@ -107,7 +107,7 @@ function NewRequestHeader(props) {
           const variant = result.status == true ? "success" : "error";
           const url = `${network.explorer}/tx/${result.transactionHash}`;
           
-          //navigate('/apps/expensedao/requests');
+          navigate('/apps/expensedao/requests');
         });
       } catch (e) {
         console.log(e);
@@ -132,13 +132,13 @@ function NewRequestHeader(props) {
             className="flex items-center sm:mb-12"
             component={Link}
             role="button"
-            to="/apps/expensedao/organizations/choose"
+            to="/apps/expensedao/requests"
             color="inherit"
           >
             <Icon className="text-20">
               {theme.direction === 'ltr' ? 'arrow_back' : 'arrow_forward'}
             </Icon>
-            <span className="hidden sm:flex mx-4 font-medium">Back</span>
+            <span className="hidden sm:flex mx-4 font-medium">Requests</span>
           </Typography>
         </motion.div>
 

@@ -25,12 +25,6 @@ const navigationConfig = [
         url: 'apps/expensedao/organizations/choose',
       },
       {
-        id: 'new-organization',
-        title: 'New Organization',
-        type: 'item',
-        url: 'apps/expensedao/organizations/new',
-      },
-      {
         id: 'organization-profile',
         title: 'Organization profile',
         type: 'item',
@@ -42,18 +36,6 @@ const navigationConfig = [
         type: 'item',
         url: 'apps/expensedao/requests',
         end: true,
-      },
-      {
-        id: 'request',
-        title: 'Request Detail',
-        type: 'item',
-        url: 'apps/expensedao/requests/1',
-      },
-      {
-        id: 'new-request',
-        title: 'New Request',
-        type: 'item',
-        url: 'apps/expensedao/request/new',
       },
     ]
   },

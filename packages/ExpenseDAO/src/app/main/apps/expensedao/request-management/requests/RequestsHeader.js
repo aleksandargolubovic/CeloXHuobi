@@ -1,12 +1,14 @@
 import Icon from '@mui/material/Icon';
 import Input from '@mui/material/Input';
 import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
 import { ThemeProvider } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectMainTheme } from 'app/store/fuse/settingsSlice';
 import { setRequestsSearchText } from '../store/requestsSlice';
+import { Link } from 'react-router-dom';
 
 function RequestsHeader(props) {
   const dispatch = useDispatch();
@@ -58,6 +60,22 @@ function RequestsHeader(props) {
             />
           </Paper>
         </ThemeProvider>
+      </div>
+
+      <div
+        className="flex"
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0, transition: { delay: 0.3 } }}
+      >
+        <Button
+          className="whitespace-nowrap mx-4"
+          variant="contained"
+          color="secondary"
+          component={Link}
+          to="/apps/expensedao/request/new"
+        >
+          Create New Request
+        </Button>
       </div>
     </div>
   );

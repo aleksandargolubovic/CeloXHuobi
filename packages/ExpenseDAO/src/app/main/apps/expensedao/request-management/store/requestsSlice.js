@@ -37,7 +37,6 @@ export const getRequests =
     response = await params.organization.contract.methods.getMembersRequests()
       .call({from: params.address});
   }
-  console.log(response);
 
   let data = response.map((req) => {
 

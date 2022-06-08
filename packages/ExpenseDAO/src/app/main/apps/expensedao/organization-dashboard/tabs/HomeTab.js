@@ -128,17 +128,6 @@ function HomeTab() {
                 Send
               </Button>
             </div>
-            {/* <div className="flex items-center">
-              <TextField
-                className="mt-8 mb-16"
-                label="Amount1"
-                id="event"
-                value={events}
-                //type="string"
-                variant="outlined"
-                fullWidth
-              />
-            </div> */}
           </div>
         </Paper>
       </motion.div>

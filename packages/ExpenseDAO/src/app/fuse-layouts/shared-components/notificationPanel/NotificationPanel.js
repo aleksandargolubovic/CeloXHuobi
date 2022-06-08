@@ -6,7 +6,7 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Typography from '@mui/material/Typography';
 import withReducer from 'app/store/withReducer';
 import { useSnackbar } from 'notistack';
-import { useEffect, memo } from 'react';
+import { useEffect, memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import NotificationModel from './model/NotificationModel';
@@ -21,8 +21,7 @@ import {
 } from './store/dataSlice';
 import reducer from './store';
 import { closeNotificationPanel, toggleNotificationPanel } from './store/stateSlice';
-import { useEvents } from 'app/services/hooks';
-import { getWidgets } from 'app/main/apps/expensedao/organization-dashboard//store/widgetsSlice';
+import { getWidgets } from 'app/main/apps/expensedao/organization-dashboard/store/widgetsSlice';
 import { useCelo } from '@celo/react-celo';
 
 const StyledSwipeableDrawer = styled(SwipeableDrawer)(({ theme }) => ({
@@ -46,62 +45,96 @@ function NotificationPanel(props) {
   const location = useLocation();
   const dispatch = useDispatch();
   const organization = useSelector(({ expensedaoorg }) => expensedaoorg?.organization);
-  const { kit, address, network, performActions } = useCelo();
+  const { kit } = useCelo();
   const state = useSelector(({ notificationPanel }) => notificationPanel.state);
   const notifications = useSelector(selectNotifications);
+  const [subscription, setSubscription] = useState();
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   useEffect(() => {
-    console.log("NOTIFICATION refresh");
     if (organization && organization.contract) {
-      console.log("NOTIFICATION refresh success");
       const response = kit.connection.web3.eth.clearSubscriptions();
-      console.log(response);
-      console.log("subscribed");
-      organization.contract.events.allEvents({
-      //   filter: {
-      //     value: [],
-      // },
-      fromBlock: 'latest'
-      }, function(error, event){ })
-      .on('data', function(event){
-          console.log("data");
-          console.log(event);
+      if (organization.isAdmin) {
+        let sub = organization.contract.events.NewRequestCreated({
+        //   filter: {
+        //     value: [],
+        // },
+          fromBlock: 'latest'
+        })
+        .on('data', function(event) {
           if (event.event === undefined) {
-          organization.contract.getPastEvents("allEvents", {
-            fromBlock: event.blockNumber,
-            toBlock: 'latest'}, function(error, events){
-              console.log(events);
-              createNotification({
-                message: "NEW EVENT",
-                options: { variant: 'success' },
-              });
-            });
+            organization.contract.getPastEvents("NewRequestCreated", {
+              fromBlock: event.blockNumber,
+              toBlock: 'latest'}, function(error, events) {});
           } else {
             createNotification({
-              message: "NEW EVENT",
+              message: "New request created!",
               options: { variant: 'success' },
             });
+            dispatch(getWidgets({
+              contract: organization.contract,
+              kit: kit,
+              currency: organization.currency }));
           }
+        })
+        .on('changed', function(event) {
+            // remove event from local database
+        })
+        // If the transaction was rejected by the network with a receipt,
+        // the second parameter will be the receipt.
+        .on('error', function(error, receipt) {
+            console.log(error);
+        })
+        .on("connected", function(subscriptionId) {
+          // console.log(subscriptionId);
+        });
 
-      })
-      .on('changed', function(event){
-          // remove event from local database
-      })
-      .on('error', function(error, receipt) { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
-          console.log(error);
-      })
-      .on("connected", function(subscriptionId){
-        console.log("connected");
-        console.log(subscriptionId);
-      });
+        setSubscription(sub);
+      } else {
+        organization.contract.events.PaymentTransfered({
+          //   filter: {
+          //     value: [],
+          // },
+            fromBlock: 'latest'
+          })
+          .on('data', function(event){
+              console.log("data");
+              console.log(event);
+              if (event.event === undefined) {
+              organization.contract.getPastEvents("PaymentTransfered", {
+                fromBlock: event.blockNumber,
+                toBlock: 'latest'}, function(error, events) {});
+              } else {
+                createNotification({
+                  message: "Request approved!",
+                  options: { variant: 'success' },
+                });
+              }
+  
+          })
+          .on('changed', function(event) {
+              // remove event from local database
+          })
+          .on('error', function(error, receipt) {
+              console.log(error);
+          })
+          .on("connected", function(subscriptionId) {
+            // console.log(subscriptionId);
+          });
+      }
+    }
+
+    return () => {
+      if (subscription) {
+        subscription.unsubscribe(function(error, success) {
+          if(success)
+              console.log('Successfully unsubscribed!');
+        });
+      }
     }
   }, [organization]);
 
-  /*
-    Add Notifications for demonstration
-  */
   function createNotification(obj) {
     dispatch(addNotification(NotificationModel(obj)));
   };

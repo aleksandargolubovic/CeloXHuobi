@@ -62,11 +62,11 @@ function EnterOrganizationDialog(props) {
   }
 
   async function onSubmit(data) {
-    console.info(data);
+    // console.info(data);
     dispatch(newOrganization());
 
     let response = await contract.methods.organizations(data.name).call();
-    console.log(response);
+    // console.log(response);
     
     if (response === NULL_ADDR) {
       dispatch(showMessage({ message: "Organization doesn't exist" }));
@@ -75,6 +75,16 @@ function EnterOrganizationDialog(props) {
         expenseDAO.abi,
         response
       );
+      
+      const isMember = await daoContract.methods.isMember().call();
+      if (isMember === false) {
+        const isApprover = await daoContract.methods.isApprover().call();
+        if (isApprover === false) {
+          dispatch(showMessage({ message: "You are not part of this organization!" }));
+          return;
+        }
+      }
+
       const stableCoinAddress = await daoContract.methods.stableCoinAddress().call();
       const cEURAddress = await kit.celoTokens.getAddress(StableToken.cEUR);
       let currency = 'cUSD';

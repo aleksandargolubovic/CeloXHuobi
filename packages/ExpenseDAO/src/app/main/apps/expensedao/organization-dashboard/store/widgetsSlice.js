@@ -47,11 +47,13 @@ export const getWidgets =
   }
 
   // Set 'spent' widget.
-  data[6].totalSpent.count = (parseFloat(response.paidTotal).toFixed(4));
+  data[6].totalSpent.count = (parseFloat(Web3.utils.fromWei(response.paidTotal.toString(), 'ether')).toFixed(4));
   data[6].remaining.count = parseFloat(Web3.utils.fromWei(balanceInCurrency.toString(), 'ether')).toFixed(4);
   const sum = parseFloat(data[6].totalSpent.count)
     + parseFloat(data[6].remaining.count);
   data[6].totalBudget.count = sum.toFixed(4);
+  //console.log("balances", data[6].totalSpent.count, data[6].remaining.count, data[6].totalBudget.count);
+
   return data;
 });
 

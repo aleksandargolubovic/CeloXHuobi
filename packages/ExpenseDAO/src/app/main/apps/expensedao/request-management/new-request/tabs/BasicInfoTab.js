@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import Icon from '@mui/material/Icon';
@@ -53,6 +54,7 @@ const Root = styled('div')(({ theme }) => ({
 
 function BasicInfoTab(props) {
   const [loadingAmount, setLoadingAmount] = useState(false);
+  const organization = useSelector(({ expensedaoorg }) => expensedaoorg.organization);
 
   const methods = useFormContext();
   const { control, formState, watch, register, setValue } = methods;
@@ -190,7 +192,7 @@ function BasicInfoTab(props) {
                 fullWidth
                 type="number"
                 InputProps={{
-                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  startAdornment: <InputAdornment position="start">{organization.currency}</InputAdornment>,
                 }}
               />
             )}

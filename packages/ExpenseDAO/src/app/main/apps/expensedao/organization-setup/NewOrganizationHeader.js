@@ -1,6 +1,7 @@
 import Button from '@mui/material/Button';
 import Icon from '@mui/material/Icon';
 import { useTheme } from '@mui/material/styles';
+import { showMessage } from 'app/store/fuse/messageSlice';
 import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
 import { useFormContext } from 'react-hook-form';
@@ -13,6 +14,7 @@ import { useCelo } from '@celo/react-celo';
 import expenseDAOFactory from "app/contracts/ExpenseDAOFactory.json";
 import registry from "app/contracts/Registry.json";
 import expenseDAO from "app/contracts/ExpenseDAO.json";
+import Web3 from 'web3';
 
 const NULL_ADDR = '0x0000000000000000000000000000000000000000';
 
@@ -21,9 +23,9 @@ function NewOrganizationHeader(props) {
   const methods = useFormContext();
   const { formState, watch, getValues } = methods;
   const { isValid, dirtyFields } = formState;
-  const featuredImageId = watch('featuredImageId');
-  const images = watch('images');
-  const name = watch('name');
+  // const featuredImageId = watch('featuredImageId');
+  // const images = watch('images');
+  // const name = watch('name');
   const theme = useTheme();
   const navigate = useNavigate();
   const { kit, address, network, performActions } = useCelo();
@@ -36,6 +38,29 @@ function NewOrganizationHeader(props) {
       );
 
       const parameters = getValues();
+      // Check whether all the addresses are valid.
+      for (let i = 0; i < parameters.approvers.length; i++) {
+        if (!Web3.utils.isAddress(parameters.approvers[i])) {
+          dispatch(showMessage({ message: parameters.approvers[i] + " is not valid address! Please check your input lists" }));
+          return;
+        }
+      }
+
+      for (let i = 0; i < parameters.members.length; i++) {
+        if (!Web3.utils.isAddress(parameters.members[i])) {
+          dispatch(showMessage({ message: parameters.members[i] + " is not valid address! Please check your input lists" }));
+          return;
+        }
+      }
+
+      // Check the approvers and members lists. There must not be the same
+      // address in both lists.
+      for (let index = 0; index < parameters.approvers.length; index++) {
+        if (parameters.members.includes(parameters.approvers[index])) {
+          dispatch(showMessage({ message: "One address can be either an approver or a member! Please check your input lists" }));
+          return;
+        }
+      }
 
       let stableTokenAddress = NULL_ADDR;
       switch (parameters.currency) {

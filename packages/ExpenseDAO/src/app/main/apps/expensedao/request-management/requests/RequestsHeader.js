@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 function RequestsHeader(props) {
   const dispatch = useDispatch();
   const searchText = useSelector(({ expensedao }) => expensedao.requests.searchText);
+  const organization = useSelector(({ expensedaoorg }) => expensedaoorg.organization);
   const mainTheme = useSelector(selectMainTheme);
 
   return (
@@ -61,7 +62,8 @@ function RequestsHeader(props) {
           </Paper>
         </ThemeProvider>
       </div>
-
+      
+      {!organization.isAdmin && (
       <div
         className="flex"
         initial={{ opacity: 0, x: 20 }}
@@ -76,7 +78,7 @@ function RequestsHeader(props) {
         >
           Create New Request
         </Button>
-      </div>
+      </div>)}
     </div>
   );
 }

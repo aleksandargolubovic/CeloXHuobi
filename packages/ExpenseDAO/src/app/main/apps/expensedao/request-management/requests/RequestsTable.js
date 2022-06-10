@@ -12,10 +12,10 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import withRouter from '@fuse/core/withRouter';
 import FuseLoading from '@fuse/core/FuseLoading';
+import { useCelo } from '@celo/react-celo';
 import RequestsStatus from '../request/RequestsStatus';
 import { selectRequests, getRequests } from '../store/requestsSlice';
 import RequestsTableHead from './RequestsTableHead';
-import { useCelo } from '@celo/react-celo';
 
 function RequestsTable(props) {
   const dispatch = useDispatch();

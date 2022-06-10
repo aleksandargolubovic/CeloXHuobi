@@ -211,24 +211,12 @@ const projectDashboardAppDB = {
 						title: ''
 					},
 					{
-						id: 'name',
-						title: 'Name'
+						id: 'address',
+						title: 'Address'
 					},
 					{
-						id: 'position',
-						title: 'Position'
-					},
-					{
-						id: 'office',
-						title: 'Office'
-					},
-					{
-						id: 'email',
-						title: 'Email'
-					},
-					{
-						id: 'phone',
-						title: 'Phone'
+						id: 'role',
+						title: 'Role'
 					}
 				],
 				rows: [
@@ -240,25 +228,13 @@ const projectDashboardAppDB = {
 								value: 'assets/images/avatars/james.jpg'
 							},
 							{
-								id: 'name',
+								id: 'address',
 								value: 'Jack Gilbert'
 							},
 							{
-								id: 'position',
+								id: 'role',
 								value: 'Design Manager'
 							},
-							{
-								id: 'office',
-								value: 'Johor Bahru'
-							},
-							{
-								id: 'email',
-								value: 'jgilbert48@mail.com'
-							},
-							{
-								id: 'phone',
-								value: '+16 298 032 7774'
-							}
 						]
 					},
 					{
@@ -269,24 +245,12 @@ const projectDashboardAppDB = {
 								value: 'assets/images/avatars/katherine.jpg'
 							},
 							{
-								id: 'name',
+								id: 'address',
 								value: 'Kathy Anderson'
 							},
 							{
-								id: 'position',
+								id: 'role',
 								value: 'Recruiting Manager'
-							},
-							{
-								id: 'office',
-								value: 'Solţānābād'
-							},
-							{
-								id: 'email',
-								value: 'kanderson49@mail.com.br'
-							},
-							{
-								id: 'phone',
-								value: '+23 572 311 1136'
 							}
 						]
 					},
@@ -298,199 +262,13 @@ const projectDashboardAppDB = {
 								value: 'assets/images/avatars/garry.jpg'
 							},
 							{
-								id: 'name',
+								id: 'address',
 								value: 'Gary Gonzalez'
 							},
 							{
-								id: 'position',
+								id: 'role',
 								value: 'Speech Pathologist'
 							},
-							{
-								id: 'office',
-								value: 'Gangkou'
-							},
-							{
-								id: 'email',
-								value: 'ggonzalez4r@mail.cc'
-							},
-							{
-								id: 'phone',
-								value: '+10 862 046 7916'
-							}
-						]
-					},
-					{
-						id: 4,
-						cells: [
-							{
-								id: 'avatar',
-								value: 'assets/images/avatars/andrew.jpg'
-							},
-							{
-								id: 'name',
-								value: 'Mark Turner'
-							},
-							{
-								id: 'position',
-								value: 'Recruiting Manager'
-							},
-							{
-								id: 'office',
-								value: 'Neftegorsk'
-							},
-							{
-								id: 'email',
-								value: 'mturner4a@mail.com'
-							},
-							{
-								id: 'phone',
-								value: '+01 139 803 9263'
-							}
-						]
-					},
-					{
-						id: 5,
-						cells: [
-							{
-								id: 'avatar',
-								value: 'assets/images/avatars/jane.jpg'
-							},
-							{
-								id: 'name',
-								value: 'Kathryn Martinez'
-							},
-							{
-								id: 'position',
-								value: 'Director of Sales'
-							},
-							{
-								id: 'office',
-								value: 'Palekastro'
-							},
-							{
-								id: 'email',
-								value: 'kmartinez4b@mail.com'
-							},
-							{
-								id: 'phone',
-								value: '+25 467 022 5393'
-							}
-						]
-					},
-					{
-						id: 6,
-						cells: [
-							{
-								id: 'avatar',
-								value: 'assets/images/avatars/alice.jpg'
-							},
-							{
-								id: 'name',
-								value: 'Annie Gonzales'
-							},
-							{
-								id: 'position',
-								value: 'Actuary'
-							},
-							{
-								id: 'office',
-								value: 'Candon'
-							},
-							{
-								id: 'email',
-								value: 'agonzales4c@mail.edu'
-							},
-							{
-								id: 'phone',
-								value: '+99 891 619 7138'
-							}
-						]
-					},
-					{
-						id: 7,
-						cells: [
-							{
-								id: 'avatar',
-								value: 'assets/images/avatars/vincent.jpg'
-							},
-							{
-								id: 'name',
-								value: 'Howard King'
-							},
-							{
-								id: 'position',
-								value: 'Human Resources'
-							},
-							{
-								id: 'office',
-								value: 'Bergen op Zoom'
-							},
-							{
-								id: 'email',
-								value: 'hking4d@mail.gov'
-							},
-							{
-								id: 'phone',
-								value: '+46 984 348 1409'
-							}
-						]
-					},
-					{
-						id: 8,
-						cells: [
-							{
-								id: 'avatar',
-								value: 'assets/images/avatars/joyce.jpg'
-							},
-							{
-								id: 'name',
-								value: 'Elizabeth Dixon'
-							},
-							{
-								id: 'position',
-								value: 'Electrical Engineer'
-							},
-							{
-								id: 'office',
-								value: 'Písečná'
-							},
-							{
-								id: 'email',
-								value: 'edixon4e@mail.gov'
-							},
-							{
-								id: 'phone',
-								value: '+33 332 067 9063'
-							}
-						]
-					},
-					{
-						id: 9,
-						cells: [
-							{
-								id: 'avatar',
-								value: 'assets/images/avatars/danielle.jpg'
-							},
-							{
-								id: 'name',
-								value: 'Dorothy Morris'
-							},
-							{
-								id: 'position',
-								value: 'Office Assistant'
-							},
-							{
-								id: 'office',
-								value: 'Magsaysay'
-							},
-							{
-								id: 'email',
-								value: 'dmorris4f@mail.com'
-							},
-							{
-								id: 'phone',
-								value: '+05 490 958 6120'
-							}
 						]
 					},
 				]

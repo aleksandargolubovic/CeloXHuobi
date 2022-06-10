@@ -1,11 +1,7 @@
 import { motion } from 'framer-motion';
-import { useSelector } from 'react-redux';
-import { selectWidgets } from '../store/widgetsSlice';
 import WidgetTeamMembers from '../widgets/WidgetTeamMembers';
 
 function TeamMembersTab() {
-  const widgets = useSelector(selectWidgets);
-
   const container = {
     show: {
       transition: {
@@ -22,7 +18,7 @@ function TeamMembersTab() {
   return (
     <motion.div className="flex flex-wrap" variants={container} initial="hidden" animate="show">
       <motion.div variants={item} className="widget flex w-full p-12">
-        <WidgetTeamMembers widget={widgets.widget11} />
+        <WidgetTeamMembers/>
       </motion.div>
     </motion.div>
   );

@@ -12,9 +12,8 @@ import { addNotification } from 'app/fuse-layouts/shared-components/notification
 import NotificationModel from 'app/fuse-layouts/shared-components/notificationPanel/model/NotificationModel';
 
 import _ from '@lodash';
-import { addToIPFS, retrieveFile } from "./helpers/web3Storage";
 import { useCelo } from '@celo/react-celo';
-import Web3 from 'web3';
+import { addToIPFS, retrieveFile } from "./helpers/web3Storage";
 
 function NewRequestHeader(props) {
   const dispatch = useDispatch();
@@ -59,9 +58,35 @@ function NewRequestHeader(props) {
     return categoryInt;
   }
 
+  function calculateCarbonFootprint()
+  {
+    console.log(getValues());
+    const parameters = getValues();
+    let co2PerKm = 0;
+    switch (parameters.CO_vehicle) {
+      case 'Bus':
+        co2PerKm = 0.000089;
+        break;
+      case 'Airplane':
+        co2PerKm = 0.000180;
+        break;
+      case 'Car':
+        co2PerKm = 0.000120;
+        break;
+      default:
+        co2PerKm = 0;
+    }
+    let result = co2PerKm * parameters.CO_distance;
+    if (parameters.CO_distance_unit === "mi") result *= 1.6;
+    console.log(result);
+    return result;
+  }
+
   function handleSendRequest() {
     console.log(getValues());
     setButtonLoading(true);
+
+    calculateCarbonFootprint();
 
     const files = [ image.file ];
     addToIPFS(files).then(async (result) => {
@@ -118,7 +143,6 @@ function NewRequestHeader(props) {
       console.log(err);
       setButtonLoading(false);
     });
-
   }
 
   return (

@@ -3,8 +3,11 @@ import { useSelector } from 'react-redux';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import Icon from '@mui/material/Icon';
+import Co2Icon from '@mui/icons-material/Co2'
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FuseUtils from '@fuse/utils';
 import Tesseract from 'tesseract.js';
@@ -55,14 +58,33 @@ const Root = styled('div')(({ theme }) => ({
 function BasicInfoTab(props) {
   const [loadingAmount, setLoadingAmount] = useState(false);
   const organization = useSelector(({ expensedaoorg }) => expensedaoorg.organization);
+  const [checked, setChecked] = useState(false);
 
   const methods = useFormContext();
-  const { control, formState, watch, register, setValue } = methods;
+  const { control, formState, watch, register, setValue, getValues } = methods;
   const image = watch('image', "");
 
   const categories = [
     "Equipment", "Home Office", "Meals and Entertainment", "Office Supplies", "Travel", "Other"
   ];
+
+  const vehicles = [
+    "Car", "Bus", "Airplane"
+  ];
+
+  const units = [
+    "km", "mi",
+  ];
+
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+    setValue("carbon_offset", event.target.checked);
+  };
+
+  function getCategory() {
+    const parameters = getValues();
+    return parameters.category;
+  }
 
   return (
     <div>
@@ -83,7 +105,7 @@ function BasicInfoTab(props) {
                 defaultValue=""
                 control={control}
                 render={({ field: { onChange, value } }) => (
-                  value == "" ?
+                  value === "" ?
                     <label
                       htmlFor="button-file"
                       className="productImageUpload flex items-center justify-center relative w-128 h-128 rounded-16 mx-12 mb-24 overflow-hidden cursor-pointer shadow hover:shadow-lg"
@@ -121,7 +143,7 @@ function BasicInfoTab(props) {
                           const newImage = await readFileAsync();
                           onChange(newImage);
                           setLoadingAmount(true);
-                          let src = await new Promise(resolve => {
+                          const src = await new Promise(resolve => {
                             const reader = new FileReader();
                             reader.readAsDataURL(newImage.file);
                             reader.onload = () => resolve(reader.result);
@@ -132,8 +154,8 @@ function BasicInfoTab(props) {
                             // { logger: m => console.log(m) }
                           ).then(({ data: { text } }) => {
                             console.log(text);
-                            let totalPosition = text.indexOf("Total") + 6;
-                            let amount = text.substring(totalPosition, text.indexOf("\n", totalPosition));
+                            const totalPosition = text.indexOf("Total") + 6;
+                            const amount = text.substring(totalPosition, text.indexOf("\n", totalPosition));
                             console.log(amount);
                             setValue('amount', amount)
                             setLoadingAmount(false);
@@ -261,6 +283,103 @@ function BasicInfoTab(props) {
           />
         </div>
       </div>
+
+      {getCategory() === "Travel" &&
+        <div className="pb-24">
+          <div className="pb-16 flex items-center">
+            <Co2Icon color="action" />
+            <Typography className="h2 mx-12 font-medium" color="textSecondary">
+              Carbon offset
+            </Typography>
+          </div>
+          <div className="mb-24">
+            <FormControlLabel
+              label="Request eligible for carbon offset"
+              control={
+                <Checkbox
+                  checked={checked}
+                  onChange={handleChange}
+                />
+              }
+            />
+          </div>
+
+          {checked &&
+            <>
+              <div className="mb-24">
+                <Controller
+                  name="CO_vehicle"
+                  control={control}
+                  defaultValue=''
+                  render={({ field }) => (
+                    <TextField
+                      fullWidth
+                      required
+                      select
+                      label="Choose Vehicle"
+                      id="CO_vehicle"
+                      variant="outlined"
+                      {...field}
+                    >
+                      {vehicles.map((vehicle) => (
+                        <MenuItem key={vehicle} value={vehicle}>
+                          {vehicle}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
+              </div>
+              <div className="mb-24">
+                <Controller
+                  name="CO_distance"
+                  defaultValue=''
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      className="mt-8 mb-16"
+                      required
+                      id="CO_distance"
+                      label="Distance"
+                      variant="outlined"
+                      fullWidth
+                      type="number"
+                      InputProps={{
+                        endAdornment:
+                          <InputAdornment position="end">
+                            <Controller
+                              name="CO_distance_unit"
+                              control={control}
+                              defaultValue='km'
+                              render={({ fieldUnit }) => (
+                                <TextField
+                                  fullWidth
+                                  required
+                                  select
+                                  defaultValue='km'
+                                  id="CO_distance_unit"
+                                  variant="outlined"
+                                  {...fieldUnit}
+                                >
+                                  {units.map((unit) => (
+                                    <MenuItem key={unit} value={unit}>
+                                      {unit}
+                                    </MenuItem>
+                                  ))}
+                                </TextField>
+                              )}
+                            />
+                          </InputAdornment>,
+                      }}
+                    />
+                  )}
+                />
+              </div>
+            </>
+          }
+        </div>
+      }
     </div>
   );
 }

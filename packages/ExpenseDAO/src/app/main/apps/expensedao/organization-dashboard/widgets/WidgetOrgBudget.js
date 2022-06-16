@@ -19,8 +19,8 @@ function WidgetOrgBudget(props) {
         <Typography className="text-16 font-medium">{widget.title}</Typography>
       </div>
       {['totalSpent', 'remaining'].map((id) => (
-        <div className="flex flex-wrap items-center w-full p-12" key={id}>
-          <div className="flex flex-col w-full sm:w-1/2 p-8">
+        <div key={id}>
+          <div className="flex flex-col w-full p-20">
             <Typography className="text-13 font-semibold" color="textSecondary">
               {widget[id].title}
             </Typography>
@@ -31,16 +31,6 @@ function WidgetOrgBudget(props) {
               <Typography className="text-32 mx-4 font-medium tracking-tighter">
                 {widget[id].count}
               </Typography>
-            </div>
-          </div>
-          <div className="flex w-full sm:w-1/2">
-            <div className="h-64 w-full">
-              <ReactApexChart
-                options={{ ...widget[id].chart.options, colors: [theme.palette.secondary.main] }}
-                series={widget[id].chart.series}
-                type={widget[id].chart.options.chart.type}
-                height={widget[id].chart.options.chart.height}
-              />
             </div>
           </div>
         </div>

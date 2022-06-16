@@ -3,6 +3,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Avatar from '@mui/material/Avatar';
 import Icon from '@mui/material/Icon';
+import Co2Icon from '@mui/icons-material/Co2'
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -73,6 +74,20 @@ function RequestDetailsTab() {
           <span className="truncate">{request.amount}</span>
         </div>
       </div>
+
+      { //request.carbonEmmisions > 0 &&
+        <div className="pb-24">
+          <div className="pb-16 flex items-center">
+            <Co2Icon color="action" />
+            <Typography className="h2 mx-12 font-medium" color="textSecondary">
+              Carbon Offset
+            </Typography>
+          </div>
+          <div className="mb-24">
+            <span className="truncate">{request.amount} t</span> { /* should be changed to request.carbonEmmisions instead of request.amount */}
+          </div>
+        </div>
+      }
 
       <div className="pb-24">
         <div className="pb-16 flex items-center">

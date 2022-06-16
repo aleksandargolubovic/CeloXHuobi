@@ -95,8 +95,11 @@ function HomeTab() {
       <motion.div variants={item} className="widget flex w-full sm:w-1/2 p-12">
         <WidgetReqPieChart widget={widgets.widget7} />
       </motion.div>
-      <motion.div variants={item} className="widget flex w-full sm:w-1/2 p-12">
+      <motion.div variants={item} className="widget flex w-full sm:w-1/2 md:w-1/4 p-12">
         <WidgetOrgBudget widget={widgets.widget9} currency={organization.currency} />
+      </motion.div>
+      <motion.div variants={item} className="widget flex w-full sm:w-1/2 md:w-1/4 p-12">
+        <WidgetOrgBudget widget={widgets.widget10} currency="MC02" />
       </motion.div>
       <motion.div variants={item} className="widget flex w-full p-12">
         <Paper className="w-full rounded-20 shadow">

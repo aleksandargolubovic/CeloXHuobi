@@ -202,6 +202,22 @@ const projectDashboardAppDB = {
 			}
 		},
 		{
+			id: 'widget10',
+			title: 'Carbon Offset',
+			totalSpent: {
+				title: 'COMPENSATED',
+				count: '7.0000',
+			},
+			remaining: {
+				title: 'TO BE COMPENSATED',
+				count: '5.2000',
+			},
+			totalBudget: {
+				title: 'REMAINING',
+				count: '20.0000'
+			}
+		},
+		{
 			id: 'widget11',
 			title: 'Team Members',
 			table: {

@@ -7,7 +7,7 @@ const DENIED = "Denied";
 const PROCESSING = "Pending";
 
 const decodeCategory = (categoryNum) => {
-  console.log(categoryNum);
+  // console.log(categoryNum);
   switch (categoryNum) {
     case '1':
       return 'Equipment';
@@ -27,18 +27,10 @@ const decodeCategory = (categoryNum) => {
 }
 
 export const getRequest = createAsyncThunk('expensedao/request/getRequest', async (params) => {
-  console.log(params);
-
-  
-  // const response = await axios.get('/api/expensedao/request', { params });
-  // const data = await response.data;
-
-  // console.log("123123213");
-  // console.log(data);
-
+  // console.log(params);
   const response = await params.organization.contract.methods
     .getRequest(params.routeParams.requestId).call();
-  console.log(response);
+  // console.log(response);
 
   const req = response;
   const data =
@@ -46,6 +38,7 @@ export const getRequest = createAsyncThunk('expensedao/request/getRequest', asyn
     id: req.id,
     creator: req.member,
     amount: (Web3.utils.fromWei(req.amount.toString(), 'ether')),
+    co2: (Web3.utils.fromWei(req.co2.toString(), 'ether')),
     date: (new Date(parseInt(req.date))).toLocaleDateString("en-US"),
     status: req.processed ? (req.approved ? APPROVED : DENIED) : PROCESSING,
     category: decodeCategory(req.category),
@@ -66,44 +59,11 @@ export const saveRequest = createAsyncThunk('expensedao/request/saveRequest', as
 export const processRequest = createAsyncThunk(
   'expensedao/request/processRequest',
   async (params, { dispatch, getState }) => {
-
-    //await axios.post('/expensedao/approve-request', { requestId });
-    //return requestId;
-  
-    // const provider = getProvider();
-    // const signer = getSigner(provider);
-    
-    // const approved = await instance.processRequest(
-    //   params.organizationId, params.requestId, true, signer);
-
-    // console.log("approved: ", approved);
-
     let request = getState().expensedao.request;
-    // request.status = APPROVED;
-    // return request;
-    //return params.requestId;
     const newState = { ...request, status: params.newStatus == true ? APPROVED : DENIED}
     return newState;
   }
 );
-
-// export const denyRequest = createAsyncThunk(
-//   'expensedao/request/denyRequest',
-//   async (params, { dispatch, getState }) => {  
-//     // const provider = getProvider();
-//     // const signer = getSigner(provider);
-
-//     // const denied = await instance.processRequest(
-//     //   params.organizationId, params.requestId, false, signer);
-
-//     // console.log("denied: ", denied);
-//     let request = getState().expensedao.request;
-//     // request.status = DENIED;
-//     // return request;
-//     const newState = { ...request, status: DENIED }
-//     return newState;
-//   }
-// );
 
 const requestSlice = createSlice({
   name: 'expensedao/request',

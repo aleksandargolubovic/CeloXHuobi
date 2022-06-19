@@ -75,7 +75,7 @@ function RequestDetailsTab() {
         </div>
       </div>
 
-      { //request.carbonEmmisions > 0 &&
+      { request.co2 !== '0' &&
         <div className="pb-24">
           <div className="pb-16 flex items-center">
             <Co2Icon color="action" />
@@ -84,7 +84,7 @@ function RequestDetailsTab() {
             </Typography>
           </div>
           <div className="mb-24">
-            <span className="truncate">{request.amount} t</span> { /* should be changed to request.carbonEmmisions instead of request.amount */}
+            <span className="truncate">{request.co2} t</span>
           </div>
         </div>
       }

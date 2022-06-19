@@ -62,7 +62,7 @@ function UserMenu(props) {
   };
 
   const displayAddress = user.data.displayName?.substr(0, 5) + "..." + user.data.displayName?.substr(-4);
-
+//md:flex 
   return (
     <>
       <Button
@@ -72,7 +72,7 @@ function UserMenu(props) {
         }}
         color="inherit"
       >
-        <div className="hidden md:flex flex-col mx-4 items-end">
+        <div className="flex flex-col mx-4 items-end">
           <Typography component="span" className="font-semibold flex">
               {parseFloat(Web3.utils.fromWei(balanceToShow(selectedBalance).toString(), 'ether')).toFixed(4) + " " + currencies[selectedBalance]}
           </Typography>
@@ -84,7 +84,7 @@ function UserMenu(props) {
         onClick={userMenuClick}
         color="inherit"
       >
-        <div className="hidden md:flex flex-col mx-4 items-end">
+        <div className="md:flex flex-col mx-4 items-end">
           <Typography component="span" className="font-semibold flex">
             {displayAddress}
           </Typography>

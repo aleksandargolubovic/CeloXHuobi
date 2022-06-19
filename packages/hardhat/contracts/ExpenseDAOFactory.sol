@@ -6,9 +6,11 @@ import "./Registry.sol";
 
 contract ExpenseDAOFactory {
   Registry public registry;
+  address private co2Token;
 
-  constructor(Registry reg) {
+  constructor(Registry reg, address co2TokenAddress) {
     registry = reg;
+    co2Token = co2TokenAddress;
   }
 
   function newExpenseOrg(
@@ -18,7 +20,7 @@ contract ExpenseDAOFactory {
     address[] calldata members)
     external returns (ExpenseDAO r) {
 
-    r = new ExpenseDAO(stableCoin, approvers, members);
+    r = new ExpenseDAO(stableCoin, co2Token, approvers, members);
     registry.register(name, r, msg.sender);
   }
 }

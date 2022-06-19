@@ -4,6 +4,8 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+//import "@openzeppelin/contracts/token/ERC777/IERC777.sol";
+import "./IERC20Burnable.sol";
 
 
 contract ExpenseDAO is ReentrancyGuard, AccessControlEnumerable {
@@ -15,13 +17,17 @@ contract ExpenseDAO is ReentrancyGuard, AccessControlEnumerable {
   uint256 private deniedRequests;
   uint256 private approvedRequests;
   uint256 private paidOut;
+  uint256 private totalCO2;
+  uint256 private pendingCO2;
 
   address public stableCoinAddress;
+  address public CO2TokenAddress;
 
   struct ReimbursementRequest {
     uint256 id;
     uint256 amount;
     uint256 date;
+    uint256 co2;
     uint8 category;
     bool processed;
     bool approved;
@@ -60,11 +66,14 @@ contract ExpenseDAO is ReentrancyGuard, AccessControlEnumerable {
   // Constructor.
   constructor(
     address stableToken,
+    address co2Token,
     address[] memory approvers,
     address[] memory members) {
     
     // Set stable token address. Usually, it would be either cUSD or cEUR.
     stableCoinAddress = stableToken;
+    // Set carbon credit token address.
+    CO2TokenAddress = co2Token;
 
     for (uint256 i = 0; i < approvers.length; i++) {
       _setupRole(APPROVER_ROLE, approvers[i]);
@@ -84,6 +93,7 @@ contract ExpenseDAO is ReentrancyGuard, AccessControlEnumerable {
     address reimbursementAddress,
     uint256 amount,
     uint256 date,
+    uint256 co2Amount,
     uint8 category)
     external
     onlyMember("Only members are allowed to create requests") {
@@ -91,11 +101,13 @@ contract ExpenseDAO is ReentrancyGuard, AccessControlEnumerable {
     uint256 requestId = numOfRequests++;
 
     categoryCounters[category]++;
+    pendingCO2 += co2Amount;
 
     ReimbursementRequest storage request = reimbursementRequests[requestId];
     request.id = requestId;
     request.amount = amount;
     request.category = category;
+    request.co2 = co2Amount;
     request.date = date;
     request.description = description;
     request.url = url;
@@ -183,7 +195,9 @@ contract ExpenseDAO is ReentrancyGuard, AccessControlEnumerable {
     uint256 category4,
     uint256 category5,
     uint256 category6,
-    uint256 paidTotal
+    uint256 paidTotal,
+    uint256 CO2Pending,
+    uint256 CO2Total
    ) {
     requestsNum = numOfRequests;
     approvedNum = approvedRequests;
@@ -195,6 +209,8 @@ contract ExpenseDAO is ReentrancyGuard, AccessControlEnumerable {
     category5 = categoryCounters[5];
     category6 = categoryCounters[6];
     paidTotal = paidOut;
+    CO2Pending = pendingCO2;
+    CO2Total = totalCO2;
   }
 
   // Returns all the reimbursement requests for the caller.
@@ -260,15 +276,25 @@ contract ExpenseDAO is ReentrancyGuard, AccessControlEnumerable {
     }
   }
 
+  // Adds new member.
   function addMember(address member)
   external
   onlyApprover("Only approver can add new members") {
     _setupRole(MEMBER_ROLE, member);
   }
 
+  // Removes existing member.
   function removeMember(address member)
   external
   onlyApprover("Only approver can remove members") {
     _revokeRole(MEMBER_ROLE, member);
+  }
+
+  function compensateCO2()
+  external
+  onlyApprover("Only approver can offset carbon credits") {
+    IERC20Burnable(CO2TokenAddress).burn(pendingCO2);
+    totalCO2 += pendingCO2;
+    pendingCO2 = 0;
   }
 }

@@ -14,19 +14,27 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
 
+  await deploy("CO2Credit", {
+    from: deployer,
+    args: [ '1000000000000000000000000000000' ],
+    log: true,
+    waitConfirmations: 5,
+  });
+
   await deploy("Registry", {
     from: deployer,
     log: true,
     waitConfirmations: 5,
   });
 
-  // Getting a previously deployed contract
+  // Getting a previously deployed contracts
+  const co2 = await ethers.getContract("CO2Credit", deployer);
   const registry = await ethers.getContract("Registry", deployer);
   
   await deploy("ExpenseDAOFactory", {
     // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
     from: deployer,
-    args: [ registry.address ],
+    args: [ registry.address, co2.address ],
     log: true,
     waitConfirmations: 5,
   });
@@ -76,4 +84,4 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
 };
 
-module.exports.tags = ["Registry", "ExpenseDAOFactory"];
+module.exports.tags = ["CO2Credit", "Registry", "ExpenseDAOFactory"];

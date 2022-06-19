@@ -7,7 +7,7 @@ const apiToken = process.env.API_TOKEN ||
 if (!apiToken) {
   console.error('A token is needed. You can create one on https://web3.storage')
 }
-console.log("APITOKEN: ", apiToken);
+//console.log("APITOKEN: ", apiToken);
 const client = new Web3Storage({ token: apiToken });
 
 

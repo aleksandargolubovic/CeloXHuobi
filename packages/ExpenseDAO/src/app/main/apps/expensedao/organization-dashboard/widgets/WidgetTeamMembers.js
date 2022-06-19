@@ -93,9 +93,11 @@ function WidgetTeamMembers(props) {
         <div className="flex items-center justify-between p-20 h-64">
           <Typography className="text-16 font-medium">
             {widget.title}
-            <IconButton onClick={() => { setOpenDialog(true) }} size="large">
-              <Icon color="blue">add_circle</Icon>
-            </IconButton>
+            {organization.isAdmin && (
+              <IconButton onClick={() => { setOpenDialog(true) }} size="large">
+                <Icon color="blue">add_circle</Icon>
+              </IconButton>
+            )}
           </Typography>
 
           <Typography className="text-11 font-500 rounded-4 text-white bg-blue px-8 py-4">
@@ -154,7 +156,7 @@ function WidgetTeamMembers(props) {
                     }
                   })}
                   <TableCell>
-                    {row.cells[2].value === "Member" &&
+                    {row.cells[2].value === "Member" && organization.isAdmin &&
                       <IconButton onClick={() => { handleRemove(row.cells[0].value) }} size="large">
                         <Icon>delete</Icon>
                       </IconButton>

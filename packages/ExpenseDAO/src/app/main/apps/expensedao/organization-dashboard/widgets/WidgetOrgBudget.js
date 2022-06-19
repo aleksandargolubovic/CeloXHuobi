@@ -18,7 +18,7 @@ function WidgetOrgBudget(props) {
       <div className="flex items-center justify-between p-20 h-64">
         <Typography className="text-16 font-medium">{widget.title}</Typography>
       </div>
-      {['totalSpent', 'remaining'].map((id) => (
+      {['totalSpent'].map((id) => (
         <div key={id}>
           <div className="flex flex-col w-full p-20">
             <Typography className="text-13 font-semibold" color="textSecondary">
@@ -35,6 +35,23 @@ function WidgetOrgBudget(props) {
           </div>
         </div>
       ))}
+      {widget['remaining'] && (
+        <div key={'remaining'}>
+          <div className="flex flex-col w-full p-20">
+            <Typography className="text-13 font-semibold" color="textSecondary">
+              {widget.remaining.title}
+            </Typography>
+            <div className="flex items-center">
+              <Typography className="text-32 font-normal" color="textSecondary">
+                {props.currency}
+              </Typography>
+              <Typography className="text-32 mx-4 font-medium tracking-tighter">
+                {widget.remaining.count}
+              </Typography>
+            </div>
+          </div>
+        </div>
+      )}
       <Divider />
       <div className="flex flex-col w-full p-20">
         <Typography className="text-13 font-semibold" color="textSecondary">

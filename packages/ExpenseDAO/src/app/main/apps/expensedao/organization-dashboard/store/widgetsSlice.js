@@ -1,6 +1,7 @@
 import { createEntityAdapter, createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import Web3 from 'web3';
+import co2Credit from "app/contracts/CO2Credit.json";
 
 export const getWidgets =
   createAsyncThunk('organizationDashboard/widgets/getWidgets', 
@@ -10,6 +11,15 @@ export const getWidgets =
   let data = await defaultResponse.data;
 
   const response = await params.contract.methods.getSummary().call();
+  
+  const co2Contract = new params.kit.connection.web3.eth.Contract(
+    co2Credit.abi,
+    co2Credit.address
+  );
+
+  const mco2Balance =
+    await co2Contract.methods.balanceOf(params.contract._address).call();
+
   const totalBalance = await params.kit.getTotalBalance(params.contract._address);
   const balanceInCurrency =
     params.currency === 'cEUR' ? totalBalance.cEUR : totalBalance.cUSD;
@@ -27,7 +37,7 @@ export const getWidgets =
   data[3].data.count =
     response.requestsNum - response.approvedNum - response.deniedNum;
 
-  // Set budget distribution. If there are no requests, use default pie chart.
+  // Set request distribution. If there are no requests, use default pie chart.
   if (response.requestsNum > 0) {
     data[4].mainChart.series = [
       response.category1 / response.requestsNum,
@@ -46,13 +56,21 @@ export const getWidgets =
       'Other'];
   }
 
-  // Set 'spent' widget.
+  // Set 'funds' widget.
   data[6].totalSpent.count = (parseFloat(Web3.utils.fromWei(response.paidTotal.toString(), 'ether')).toFixed(4));
   data[6].remaining.count = parseFloat(Web3.utils.fromWei(balanceInCurrency.toString(), 'ether')).toFixed(4);
   const sum = parseFloat(data[6].totalSpent.count)
     + parseFloat(data[6].remaining.count);
   data[6].totalBudget.count = sum.toFixed(4);
-  //console.log("balances", data[6].totalSpent.count, data[6].remaining.count, data[6].totalBudget.count);
+
+  // Set MCO2 token status widget.
+  data[7].totalSpent.count =
+    (parseFloat(Web3.utils.fromWei(response.CO2Total.toString(), 'ether')).toFixed(4));
+  data[7].remaining.count =
+    parseFloat(Web3.utils.fromWei(response.CO2Pending.toString(), 'ether')).toFixed(4);
+
+  data[7].totalBudget.count =
+    parseFloat(Web3.utils.fromWei(mco2Balance.toString(), 'ether')).toFixed(4);
 
   return data;
 });

@@ -13,6 +13,7 @@ import NotificationModel from 'app/fuse-layouts/shared-components/notificationPa
 
 import _ from '@lodash';
 import { useCelo } from '@celo/react-celo';
+import Web3 from 'web3';
 import { addToIPFS, retrieveFile } from "./helpers/web3Storage";
 
 function NewRequestHeader(props) {
@@ -62,6 +63,10 @@ function NewRequestHeader(props) {
   {
     console.log(getValues());
     const parameters = getValues();
+    console.log(parameters.CO_distance);
+    if (!parameters.CO_distance) {
+      return 0;
+    }
     let co2PerKm = 0;
     switch (parameters.CO_vehicle) {
       case 'Bus':
@@ -86,7 +91,9 @@ function NewRequestHeader(props) {
     console.log(getValues());
     setButtonLoading(true);
 
-    calculateCarbonFootprint();
+    const co2Amount = calculateCarbonFootprint();
+    console.log("CO2", co2Amount.toFixed(18));
+    console.log("CO2 wei", Web3.utils.toWei(co2Amount.toFixed(6), 'ether'));
 
     const files = [ image.file ];
     addToIPFS(files).then(async (result) => {
@@ -109,6 +116,7 @@ function NewRequestHeader(props) {
               address,
               Web3.utils.toWei(parameters.amount, 'ether'),
               parameters.date,
+              Web3.utils.toWei(co2Amount.toFixed(18), 'ether'),
               encodeCategory(parameters.category))
             .estimateGas();
   
@@ -119,6 +127,7 @@ function NewRequestHeader(props) {
               address,
               Web3.utils.toWei(parameters.amount, 'ether'),
               parameters.date,
+              Web3.utils.toWei(co2Amount.toFixed(18), 'ether'),
               encodeCategory(parameters.category))
             .send({ from: address, gasLimit });
   

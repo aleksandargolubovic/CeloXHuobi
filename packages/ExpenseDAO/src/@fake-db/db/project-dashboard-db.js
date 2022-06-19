@@ -32,7 +32,7 @@ const projectDashboardAppDB = {
 		},
     {
 			id: 'widget7',
-			title: 'Budget Distribution',
+			title: 'Request Distribution',
 			mainChart: {
 				series: [1],
 				options: {
@@ -63,7 +63,7 @@ const projectDashboardAppDB = {
 		},
 		{
 			id: 'widget8',
-			title: 'Budget Distribution',
+			title: 'Request Distribution',
 			mainChart: {
 				series: [12, 17, 28, 25, 15, 3],
 				options: {
@@ -94,110 +94,17 @@ const projectDashboardAppDB = {
 		},
 		{
 			id: 'widget9',
-			title: 'Spent',
+			title: 'Funds',
 			totalSpent: {
 				title: 'TOTAL SPENT',
 				count: '29,682.85',
-				chart: {
-					
-					series: [
-						{
-							name: 'Created',
-							data: [3, 2, 2, 4, 7, 7, 4]
-						}
-					],
-					options: {
-						chart: {
-							type: 'area',
-							height: '100%',
-							sparkline: {
-								enabled: true
-							}
-						},
-						stroke: { width: 2 },
-						grid: {
-							padding: {
-								top: 10,
-								right: 0,
-								bottom: 10,
-								left: 0
-							}
-						},
-						fill: {
-							type: 'solid',
-							opacity: 0.7
-						},
-						tooltip: {
-							followCursor: true,
-							theme       : 'dark',
-							fixed: {
-								enabled: false,
-								position: 'topRight',
-								offsetX: 0,
-								offsetY: 0,
-							},
-						},
-						xaxis: {
-							categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-						}
-					}
-				}
 			},
 			remaining: {
-				title: 'REMAINING',
+				title: 'REMAINING BALANCE',
 				count: '94.317,15',
-				chart: {
-
-						series: [
-							{
-								name: 'Created',
-								data: [1, 4, 5, 7, 8, 2, 4],
-								fill: true,
-								backgroundColor: '#42BFF7',
-								pointRadius: 0,
-								pointHitRadius: 20,
-								borderWidth: 0
-							}
-						],
-					options: {
-						chart: {
-							type: 'area',
-							height: '100%',
-							sparkline: {
-								enabled: true
-							}
-						},
-						stroke: { width: 2 },
-						grid: {
-							padding: {
-								top: 10,
-								right: 0,
-								bottom: 10,
-								left: 0
-							}
-						},
-						fill: {
-							type: 'solid',
-							opacity: 0.7
-						},
-						tooltip: {
-							followCursor: true,
-							theme       : 'dark',
-							fixed: {
-								enabled: false,
-								position: 'topRight',
-								offsetX: 0,
-								offsetY: 0,
-							},
-						},
-						xaxis: {
-							categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-						}
-					}
-				}
-			},
+      },
 			totalBudget: {
-				title: 'TOTAL BUDGET',
+				title: 'TOTAL',
 				count: '124.000,00'
 			}
 		},
@@ -213,7 +120,7 @@ const projectDashboardAppDB = {
 				count: '5.2000',
 			},
 			totalBudget: {
-				title: 'REMAINING',
+				title: 'BALANCE',
 				count: '20.0000'
 			}
 		},

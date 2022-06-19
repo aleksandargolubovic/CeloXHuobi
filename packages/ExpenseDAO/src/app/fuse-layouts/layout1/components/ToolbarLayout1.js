@@ -3,7 +3,6 @@ import { ThemeProvider } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Hidden from '@mui/material/Hidden';
 import Toolbar from '@mui/material/Toolbar';
-import ChatPanelToggleButton from 'app/fuse-layouts/shared-components/chatPanel/ChatPanelToggleButton';
 import NavbarToggleButton from 'app/fuse-layouts/shared-components/NavbarToggleButton';
 import QuickPanelToggleButton from 'app/fuse-layouts/shared-components/quickPanel/QuickPanelToggleButton';
 import UserMenu from 'app/fuse-layouts/shared-components/UserMenu';
@@ -54,10 +53,6 @@ function ToolbarLayout1(props) {
 
           <div className="flex items-center px-8 h-full overflow-x-auto">
             {/* <FullScreenToggle /> */}
-
-            {/* <Hidden lgUp>
-              <ChatPanelToggleButton />
-            </Hidden> */}
 
             <NotificationPanelToggleButton />
 

@@ -4,7 +4,6 @@ const SettingsDoc = lazy(() => import('./settings/SettingsDoc'));
 const RoutingDoc = lazy(() => import('./routing/RoutingDoc'));
 const NavigationDoc = lazy(() => import('./navigation/NavigationDoc'));
 const CodeSplittingDoc = lazy(() => import('./code-splitting/CodeSplittingDoc'));
-const MultiLanguageDoc = lazy(() => import('./multi-language/MultiLanguageDoc'));
 
 const ConfigurationDocRoutes = [
   {
@@ -22,10 +21,6 @@ const ConfigurationDocRoutes = [
   {
     path: 'configuration/code-splitting',
     element: <CodeSplittingDoc />,
-  },
-  {
-    path: 'configuration/multi-language',
-    element: <MultiLanguageDoc />,
   },
 ];
 

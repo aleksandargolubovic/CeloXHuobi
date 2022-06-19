@@ -13,4 +13,7 @@ public/
 src/app/main/documentation/material-ui-components/components/*
 src/app/main/documentation/third-party-components/*/examples/*
 
+# .env
+.env
+
 src/@fake-db/db/*

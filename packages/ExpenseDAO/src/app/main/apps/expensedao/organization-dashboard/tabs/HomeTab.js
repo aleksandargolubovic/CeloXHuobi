@@ -13,6 +13,7 @@ import WidgetReqNum from '../widgets/WidgetReqNum';
 import Web3 from 'web3';
 import { useCelo } from '@celo/react-celo';
 import { StableToken } from '@celo/contractkit';
+import co2Credit from 'app/contracts/CO2Credit.json';
 
 function HomeTab() {
   const [amount, setAmount] = useState('');
@@ -21,6 +22,11 @@ function HomeTab() {
   const widgets = useSelector(selectWidgets);
   const organization = useSelector(({ expensedaoorg }) => expensedaoorg.organization);
   const { kit, address, performActions } = useCelo();
+
+  const co2contract = new kit.connection.web3.eth.Contract(
+    co2Credit.abi,
+    co2Credit.address
+  );
 
   const container = {
     show: {
@@ -84,39 +90,26 @@ function HomeTab() {
   }
 
   const sendmco2Funds = async() => {
+    console.log("co2contract", co2contract);
     try {    
       await performActions(async (k) => {
-        let stableTokenEnum;
-        switch (organization.currency) {
-          case 'cUSD':
-            stableTokenEnum = StableToken.cUSD;
-            break;
-          case 'cEUR':
-            stableTokenEnum = StableToken.cEUR;
-            break;
-          default:
-            stableTokenEnum = StableToken.cUSD;
-            break;
-        }
-        const stableToken = await k.contracts.getStableToken(stableTokenEnum);
-        const result = await stableToken
+        const result = await co2contract.methods
           .transfer(
-            // impact market contract
             organization.contract.options.address,
-            Web3.utils.toWei(amount, 'ether')
+            Web3.utils.toWei(mco2Amount, 'ether')
           )
-          .sendAndWaitForReceipt({
+          .send({
             from: address,
             gasPrice: k.connection.defaultGasPrice,
           });
         
-        console.log(result);
+        // console.log(result);
       });
     } catch (e) {
       console.log(e);
     }
 
-    setAmount(0);
+    setmco2Amount(0);
     dispatch(getWidgets({
       contract: organization.contract,
       kit: kit,
@@ -202,6 +195,7 @@ function HomeTab() {
           </div>
         </Paper>
       </motion.div>
+      { organization.isAdmin &&
       <motion.div variants={item} className="widget flex w-full sm:w-1/2 p-12">
         <Paper className="w-full rounded-20 shadow">
           <div className="flex flex-col w-full p-20">
@@ -214,13 +208,8 @@ function HomeTab() {
                 label="Pending MCO2 amount"
                 id="mco2AmountToOffset"
                 value={widgets.widget10.remaining.count}
-                // InputProps={{
-                //   startAdornment: <InputAdornment position="start">{organization.currency}</InputAdornment>,
-                // }}
-                // type="number"
                 variant="outlined"
                 fullWidth
-                //onChange={handleAmountChange}
               />
             </div>
             <div className="flex flex-row items-center">
@@ -234,7 +223,8 @@ function HomeTab() {
             </div>
           </div>
         </Paper>
-      </motion.div>
+      </motion.div>}
+      { organization.isAdmin &&
       <motion.div variants={item} className="widget flex w-full sm:w-1/2 p-12">
         <Paper className="w-full rounded-20 shadow">
           <div className="flex flex-col w-full p-20">
@@ -267,7 +257,7 @@ function HomeTab() {
             </div>
           </div>
         </Paper>
-      </motion.div>
+      </motion.div>}
     </motion.div>
   );
 }

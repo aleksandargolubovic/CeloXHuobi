@@ -25,7 +25,7 @@ function WidgetOrgBudget(props) {
               {widget[id].title}
             </Typography>
             <div className="flex items-center">
-              <Typography className="text-32 font-normal" color="textSecondary">
+              <Typography className="text-20 font-normal" color="textSecondary">
                  {props.currency}
               </Typography>
               <Typography className="text-32 mx-4 font-medium tracking-tighter">
@@ -42,7 +42,7 @@ function WidgetOrgBudget(props) {
               {widget.remaining.title}
             </Typography>
             <div className="flex items-center">
-              <Typography className="text-32 font-normal" color="textSecondary">
+              <Typography className="text-20 font-normal" color="textSecondary">
                 {props.currency}
               </Typography>
               <Typography className="text-32 mx-4 font-medium tracking-tighter">
@@ -58,7 +58,7 @@ function WidgetOrgBudget(props) {
           {widget.totalBudget.title}
         </Typography>
         <div className="flex items-center">
-          <Typography className="text-32 font-normal" color="textSecondary">
+          <Typography className="text-20 font-normal" color="textSecondary">
             {props.currency}
           </Typography>
           <Typography className="text-32 mx-4 font-medium tracking-tighter">

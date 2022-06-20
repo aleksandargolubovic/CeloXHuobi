@@ -73,6 +73,8 @@ function BasicInfoTab(props) {
                 <TextField
                   {...params}
                   placeholder="Add approvers"
+                  error={value.length > 0 && value.length < 2}
+                  helperText={value.length > 0 && value.length < 2 ? "You mast add at least 2 approvers" : ""}
                   required
                   label="Approvers"
                   variant="outlined"
@@ -145,7 +147,7 @@ function BasicInfoTab(props) {
       <Controller
         name="currency"
         control={control}
-        defaultValue=''
+        defaultValue='cUSD'
         render={({ field }) => (
           <TextField
             fullWidth

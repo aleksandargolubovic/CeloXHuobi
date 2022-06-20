@@ -143,7 +143,7 @@ function Request(props) {
                 </motion.div>
               </div>
             </div>
-            {organization.isAdmin && request.status == 'Pending' &&
+            {organization.isAdmin && request.status == 'Pending' && request.creator !== address &&
               <motion.div
                 className="flex"
                 initial={{ opacity: 0, x: 20 }}

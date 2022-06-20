@@ -30,6 +30,11 @@ function NewOrganizationHeader(props) {
   const navigate = useNavigate();
   const { kit, address, network, performActions } = useCelo();
 
+  function checkApprovers(){
+    const parameters = getValues();
+    return parameters.approvers.length >= 2;
+  }
+
   const createNewOrganization = async() => {
     try {
       const contract = new kit.connection.web3.eth.Contract(
@@ -170,7 +175,7 @@ function NewOrganizationHeader(props) {
           className="whitespace-nowrap mx-4"
           variant="contained"
           color="secondary"
-          disabled={_.isEmpty(dirtyFields) || !isValid}
+          disabled={_.isEmpty(dirtyFields) || !isValid || !checkApprovers()}
           onClick={handleSaveOrganization}
         >
           Create New Organization

@@ -63,6 +63,12 @@ contract ExpenseDAO is ReentrancyGuard, AccessControlEnumerable {
     _;
   }
 
+  modifier memberOrApprover(string memory message) {
+    require(hasRole(MEMBER_ROLE, msg.sender) ||
+      hasRole(APPROVER_ROLE, msg.sender), message);
+    _;
+  }
+
   // Constructor.
   constructor(
     address stableToken,
@@ -75,6 +81,8 @@ contract ExpenseDAO is ReentrancyGuard, AccessControlEnumerable {
     // Set carbon credit token address.
     CO2TokenAddress = co2Token;
 
+    require(approvers.length > 1,
+      "At least two approver addresses must be provided");
     for (uint256 i = 0; i < approvers.length; i++) {
       _setupRole(APPROVER_ROLE, approvers[i]);
       _setupRole(DEFAULT_ADMIN_ROLE, approvers[i]);
@@ -85,8 +93,8 @@ contract ExpenseDAO is ReentrancyGuard, AccessControlEnumerable {
     }
   }
 
-  // Creates new reimbursement request. Only members are allowed to call this
-  // function.
+  // Creates new reimbursement request. Only members and approvers are allowed
+  // to call this function.
   function createRequest(
     string calldata description,
     string calldata url,
@@ -96,7 +104,7 @@ contract ExpenseDAO is ReentrancyGuard, AccessControlEnumerable {
     uint256 co2Amount,
     uint8 category)
     external
-    onlyMember("Only members are allowed to create requests") {
+    memberOrApprover("You are not allowed to create requests") {
 
     uint256 requestId = numOfRequests++;
 
@@ -125,6 +133,8 @@ contract ExpenseDAO is ReentrancyGuard, AccessControlEnumerable {
     onlyApprover("Only approvers are allowed to process requests") {
 
     ReimbursementRequest storage request = reimbursementRequests[requestId];
+    require(msg.sender != request.member,
+      "An Approver is not allowed to process its own requests");
 
     preProcess(request);
     request.approved = approved;

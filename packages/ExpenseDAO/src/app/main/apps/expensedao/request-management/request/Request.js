@@ -34,7 +34,6 @@ function Request(props) {
   const { kit, address, network, performActions } = useCelo();
   const request = useSelector(({ expensedao }) => expensedao.request);
   const theme = useTheme();
-
   const routeParams = useParams();
   const [tabValue, setTabValue] = useState(0);
   const [noRequest, setNoRequest] = useState(false);
@@ -143,7 +142,8 @@ function Request(props) {
                 </motion.div>
               </div>
             </div>
-            {organization.isAdmin && request.status == 'Pending' && request.creator !== address &&
+            {organization.isAdmin && request.status == 'Pending' &&
+             request.creator.toLowerCase() !== address.toLowerCase() &&
               <motion.div
                 className="flex"
                 initial={{ opacity: 0, x: 20 }}

@@ -63,7 +63,6 @@ function RequestsHeader(props) {
         </ThemeProvider>
       </div>
       
-      {!organization.isAdmin && (
       <div
         className="flex"
         initial={{ opacity: 0, x: 20 }}
@@ -78,7 +77,7 @@ function RequestsHeader(props) {
         >
           Create New Request
         </Button>
-      </div>)}
+      </div>
     </div>
   );
 }

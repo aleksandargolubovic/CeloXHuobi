@@ -484,7 +484,7 @@
           ]
         },
         "ExpenseDAOFactory": {
-          "address": "0xb066DD4f54DeC792f2DA8175AaBFA5634BA9E5E6",
+          "address": "0xC2de25024831c69bdB7cd51E6D35Ac2C9dE6d13D",
           "abi": [
             {
               "inputs": [
@@ -613,7 +613,7 @@
           ]
         },
         "Registry": {
-          "address": "0x8D2e2B18211F102547FFA6D40Da4A757922e1723",
+          "address": "0x34b1CAf30bd24c78287EC723df7a6301DF91924a",
           "abi": [
             {
               "anonymous": false,

@@ -1,12 +1,20 @@
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M16 6.75556V0L1.02839 14.6389C0.462301 15.1924 0.457194 16.1016 1.01702 16.6615L3.55555 19.2" fill="#06B6D4"/>
-<path d="M16 6.75556V0L30.9716 14.6389C31.5377 15.1924 31.5428 16.1016 30.983 16.6615L28.4444 19.2" fill="#0891B2"/>
-<path d="M3.55556 19.2L9.6 13.1556H16V19.2" fill="#0E7490"/>
-<path d="M28.4444 19.2L22.4 13.1556H16V19.2" fill="#155E75"/>
-<path d="M16 25.9556H9.95555L12.9778 22.7556L16 25.9556Z" fill="#0E7490"/>
-<path d="M16 32L22.0444 25.9556L16 25.9556V32Z" fill="#0891B2"/>
-<path d="M16 32L9.95555 25.9556H16V32Z" fill="#06B6D4"/>
-<path d="M16 25.9556H22.0444L19.0222 22.7556L16 25.9556Z" fill="#155E75"/>
-<path d="M7.72363 21.7502C7.18605 22.3085 7.19441 23.1944 7.74243 23.7424L9.95556 25.9556L16 19.5556V13.1556" fill="#06B6D4"/>
-<path d="M24.2764 21.7502C24.814 22.3085 24.8056 23.1944 24.2576 23.7424L22.0445 25.9556L16 19.5556V13.1556" fill="#0891B2"/>
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="84.737" y1="184.187" x2="84.737" y2="306.522" id="gradient-0" gradientTransform="matrix(3.06368, 0, 0, 2.728463, -172.352504, -355.849775)">
+      <stop offset="0" style="stop-color: rgba(6, 181, 212, 1)"/>
+      <stop offset="1" style="stop-color: rgba(3, 96, 113, 1)"/>
+    </linearGradient>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="138.048" y1="137.048" x2="138.048" y2="306.521" id="gradient-1" gradientTransform="matrix(3.06368, 0, 0, 2.728463, -172.352504, -355.849775)">
+      <stop offset="0" style="stop-color: rgba(6, 181, 212, 1)"/>
+      <stop offset="1" style="stop-color: rgba(3, 96, 113, 1)"/>
+    </linearGradient>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="190.796" y1="234.131" x2="190.796" y2="306.522" id="gradient-2" gradientTransform="matrix(3.06368, 0, 0, 2.728463, -172.352504, -355.849775)">
+      <stop offset="0" style="stop-color: rgba(6, 181, 212, 1)"/>
+      <stop offset="1" style="stop-color: rgba(3, 96, 113, 1)"/>
+    </linearGradient>
+  </defs>
+  <rect x="20.202" y="146.697" width="134.1" height="333.787" style="paint-order: fill; fill: url(#gradient-0);"/>
+  <rect x="183.53" y="18.08" width="134.1" height="462.401" style="paint-order: fill; fill: url(#gradient-1);"/>
+  <rect x="345.136" y="282.968" width="134.1" height="197.516" style="paint-order: fill; fill: url(#gradient-2);"/>
 </svg>

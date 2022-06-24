@@ -84,7 +84,7 @@ function RequestDetailsTab() {
             </Typography>
           </div>
           <div className="mb-24">
-            <span className="truncate">{request.co2} t</span>
+            <span className="truncate">{parseFloat(request.co2).toFixed(4)} t</span>
           </div>
         </div>
       }
